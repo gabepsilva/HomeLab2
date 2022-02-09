@@ -1,0 +1,58 @@
+---
+- name: Install requirements
+  become: true
+  apt: name={{ item }} state=latest update_cache=yes
+  loop: ['bind9-host']
+
+- name: Prep install dir
+  file:
+      path: /app/AdGuardHome
+      owner: adguard
+      group: adguard
+
+
+- name: Download release AdGuardHome_linux_amd64.tar.gz
+  get_url:
+    url: https://static.adguard.com/adguardhome/release/AdGuardHome_linux_amd64.tar.gz
+    dest: /tmp/AdGuardHome_linux_amd64.tar.gz
+
+- name: Extract bins
+  ansible.builtin.unarchive:
+    src: /tmp/AdGuardHome_linux_amd64.tar.gz
+    dest: /app
+    remote_src: yes
+
+- name: Install
+  become: true
+  command:
+    cmd: /app/AdGuardHome/AdGuardHome -s install
+
+- name: Start
+  become: true
+  command:
+    cmd: /app/AdGuardHome/AdGuardHome -s start
+
+- name: Disable DNSStubListener 1/4
+  file:
+    path: /etc/systemd/resolved.conf.d/
+    state: directory
+
+- name: Disable DNSStubListener 2/4
+  become: true
+  ansible.builtin.copy:
+    src: adguardhome.conf
+    dest: /etc/systemd/resolved.conf.d/
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Disable DNSStubListener 3/4
+  become: true
+  file:
+    src: "/run/systemd/resolve/resolv.conf"
+    dest: "/etc/resolv.conf"
+    state: link
+  notify:
+    - Reload systemd-resolved
+    
+

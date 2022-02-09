@@ -1,0 +1,6 @@
+---
+- name: Reload systemd-resolved
+  become: true
+  service:
+    name: systemd-resolved
+    state: restarted

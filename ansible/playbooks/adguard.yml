@@ -1,0 +1,9 @@
+---
+
+- hosts: adguard
+  remote_user: adguard
+  gather_facts: no
+
+  roles:
+    - base
+    - adguard
