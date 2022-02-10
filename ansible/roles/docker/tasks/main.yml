@@ -1,0 +1,34 @@
+---
+# tasks file for docker
+
+- name: Install required system packages
+  package: name={{ item }} state=latest update_cache=yes 
+  loop: ['ca-certificates', 'curl', 'lsb-release']
+
+- name: Add Docker GPG apt Key
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+
+- name: Add Docker Repository
+  apt_repository:
+    repo: deb https://download.docker.com/linux/ubuntu bionic stable
+    state: present
+
+- name: Update apt and install docker-ce
+  apt: update_cache=yes name=docker-ce state=latest
+
+- name: Clean apt cache
+  command:
+    cmd: apt-get clean
+
+- name: Ensure group "docker" 
+  ansible.builtin.group:
+    name: docker
+    state: present
+
+- name: adding existing user '{{ ansible_ssh_user }}' to group docker
+  user:
+    name: '{{ ansible_ssh_user }}'
+    groups: docker
+    append: yes

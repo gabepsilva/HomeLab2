@@ -1,0 +1,5 @@
+- hosts: knode3
+  gather_facts: false
+
+  roles:
+    - base
