@@ -1,15 +1,18 @@
 ---
-#- name: Ensure openssh trasnfer protocol
-#  become: true
-#  ansible.builtin.lineinfile:
-#    path: /etc/ssh/sshd_config
-#    regexp: '^ubsystem sftp'
-#    line: ubsystem sftp internal-sftp
- # notify:
- #   - Restart sshd
-
 - name: Update apt cache
   become: true
-  apt: state=latest update_cache=yes 
+  package: state=latest update_cache=yes 
 
+- name: Install Utils
+  become: true
+  package:
+    name: '{{ item }}'
+    state: 'latest'
+    update_cache: yes
+    autoclean: yes
+  loop: [ 'git', 'curl', 'cron', 'jq', 'htop', 'sysstat']
 
+- name: "clean cache"
+  command: apt-get clean
+  become: yes
+  when: ansible_distribution in ['Debian', 'Ubuntu']
