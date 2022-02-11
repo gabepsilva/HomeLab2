@@ -1,0 +1,24 @@
+---
+# tasks file for kubernetes
+
+- name: Add K8s GPG apt Key
+  apt_key:
+    url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+    state: present
+
+- name: Add Kubernetes repository.
+  apt_repository:
+    repo: deb http://apt.kubernetes.io/ kubernetes-xenial main
+    state: present
+    update_cache: true
+
+- name: Install K8s + dependencies
+  package: name={{ item }} state=latest update_cache=yes 
+  loop: ['apt-transport-https', 'curl', 'ca-certificates', 'kubelet', 'kubeadm', 'kubectl']
+
+- name: Prevent k8s version Upgrade
+  command:
+    cmd: 'apt-mark hold kubelet kubeadm kubectl'
+
+
+  

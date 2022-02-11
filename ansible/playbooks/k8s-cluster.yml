@@ -1,8 +1,9 @@
 ---
 
-- hosts: kmaster1
+- hosts: k8s
   become: true
 
   roles:
     - base
     - docker
+    - kubernetes
