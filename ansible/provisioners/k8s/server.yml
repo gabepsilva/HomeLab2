@@ -1,8 +1,9 @@
 ---
 - block:
 
-  - name: "Force destroy instance"
-    shell: exit 127
+  - name: "Force destroy instance" 
+    fail:
+      msg: The variable force_destroy says to destroy {{ name }}
     when: force_destroy | default(false)
 
   - name: Copy cloud-init profile yaml to server
