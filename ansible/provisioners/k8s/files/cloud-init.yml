@@ -38,4 +38,4 @@ config:
             gateway: 192.168.50.1
             control: auto
       - type: nameserver
-        address: 192.168.50.1
+        address: 192.168.50.3
