@@ -1,0 +1,54 @@
+---
+- block:
+
+  - name: "Force destroy instance"
+    shell: exit 127
+    when: force_destroy | default(false)
+
+  - name: Copy cloud-init profile yaml to server
+    ansible.builtin.copy:
+      src: "files" 
+      dest: /tmp/{{name}}.d/
+
+  - name: Edit node server name
+    ansible.builtin.replace:
+      path: /tmp/{{name}}.d/files/cloud-init.yml
+      regexp: 'master1'
+      replace: "{{name}}"
+
+  - name: Edit node IP
+    ansible.builtin.replace:
+      path: /tmp/{{name}}.d/files/cloud-init.yml
+      regexp: '192.168.50.21'
+      replace: "{{ip}}"
+
+  - name: "Create {{name}} server container"
+    shell: |
+      lxc profile create {{name}}
+      bash -c "cat /tmp/{{name}}.d/files/cloud-init.yml | lxc profile edit {{name}}"
+      lxc init images:ubuntu/focal/cloud {{name}} --vm
+      lxc config device add {{name}} root disk path=/ pool=default size={{disk}} 
+      lxc config device add {{name}} enp5s0 nic nictype=bridged parent=br0 name=enp5s0
+      lxc profile add {{name}} {{name}}
+      lxc profile remove {{name}} default
+      lxc config set {{name}} limits.cpu {{cpus}}
+      lxc config set {{name}} limits.memory {{mem}}
+      lxc start {{name}}
+
+  rescue:
+  - name: "Delete resources created for {{ name }}"
+    shell: |
+      lxc delete {{ name }} --force
+      lxc profile delete {{ name }}
+      ssh-keygen -R {{ name }}.psilva.org
+
+  - name: "Clean known hosts of destroyed servers on localhost"
+    shell: ssh-keygen -R {{ name }}.psilva.org
+    delegate_to: 127.0.0.1
+
+  always:
+  - name: Delete {{ name }} files 
+    file:
+      state: absent
+      path: "/tmp/{{name}}.d"
+      

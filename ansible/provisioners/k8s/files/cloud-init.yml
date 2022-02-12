@@ -29,7 +29,7 @@ config:
     version: 1
     config:
       - type: physical
-        name: eth0
+        name: enp5s0
         subnets:
           - type: static
             ipv4: true

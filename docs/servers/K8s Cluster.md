@@ -1,15 +1,19 @@
 # K8s Cluster (LXD containers)
 
+
+### pre reqs
+All commands should be executed from the root of this project.
+
+Thease commands assume you have a ansible.cfg file similar to
+`export ANSIBLE_CONFIG=./ansible/ansible.cfg`
+
+
+
 # Provisioning
 The playbook below will only create the container as specified in the playbook
 
 ```bash
-ansible-playbook -i ansible/inventory.yml ansible/provisioners/k8s/servers.yml --extra-vars="name=kmaster1 cpus=2 mem=2GB   disk=4GB ip=192.168.50.21"
-ansible-playbook -i ansible/inventory.yml ansible/provisioners/k8s/servers.yml --extra-vars="name=kmaster2 cpus=2 mem=2GB   disk=4GB ip=192.168.50.22"
-ansible-playbook -i ansible/inventory.yml ansible/provisioners/k8s/servers.yml --extra-vars="name=knode1   cpus=1 mem=1GB   disk=4GB ip=192.168.50.31"
-ansible-playbook -i ansible/inventory.yml ansible/provisioners/k8s/servers.yml --extra-vars="name=knode2   cpus=2 mem=2GB   disk=4GB ip=192.168.50.32"
-ansible-playbook -i ansible/inventory.yml ansible/provisioners/k8s/servers.yml --extra-vars="name=knode3   cpus=4 mem=8GB   disk=4GB ip=192.168.50.33"
-ansible-playbook -i ansible/inventory.yml ansible/provisioners/k8s/servers.yml --extra-vars="name=knode4   cpus=8 mem=10GB  disk=4GB ip=192.168.50.34"
+ansible-playbook  ansible/provisioners/k8s/cluster.yml
 ```
 
 In case you are recreating a server after sshed in it
