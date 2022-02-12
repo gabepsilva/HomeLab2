@@ -1,0 +1,71 @@
+---
+- hosts: captain
+
+  tasks:
+
+    - name: Provision Load Balancer 
+      include_tasks: server.yml
+      vars:
+        - name: '{{spec.name}}'
+          cpus: '{{spec.cpus}}'
+          mem: '{{spec.mem}}'
+          disk: '{{spec.disk}}'
+          ip: '{{spec.ip}}'
+          force_destroy: '{{spec.force_destroy}}'
+      loop:
+        - name: kloadbalancer1
+          cpus: 1
+          mem: 1GB
+          disk: 4GB
+          ip: 192.168.50.20
+          force_destroy: false
+        - name: kmaster1
+          cpus: 2
+          mem: 2GB
+          disk: 4GB
+          ip: 192.168.50.21
+          force_destroy: false
+        - name: kmaster2
+          cpus: 2 
+          mem: 2GB
+          disk: 4GB
+          ip: 192.168.50.22
+          force_destroy: false
+        - name: knode1
+          cpus: 1 
+          mem: 1GB
+          disk: 4GB
+          ip: 192.168.50.31
+          force_destroy: false
+        - name: knode2
+          cpus: 2 
+          mem: 2GB
+          disk: 4GB
+          ip: 192.168.50.32
+          force_destroy: false
+        - name: knode3
+          cpus: 4 
+          mem: 8GB
+          disk: 4GB
+          ip: 192.168.50.33
+          force_destroy: false
+        - name: knode4
+          cpus: 8 
+          mem: 10GB
+          disk: 4GB
+          ip: 192.168.50.34
+          force_destroy: false
+      loop_control:
+        loop_var: spec
+
+    - name: Pause to initialize the containers
+      shell: sleep 60
+      delegate_to: 127.0.0.1
+
+- hosts: k8s
+  become: true
+
+  roles:
+    - base
+    - docker
+    - kubernetes
