@@ -11,50 +11,75 @@
           mem: '{{spec.mem}}'
           disk: '{{spec.disk}}'
           ip: '{{spec.ip}}'
+          as_vm: '{{spec.as_vm}}'
           force_destroy: '{{spec.force_destroy}}'
+          skip: '{{spec.skip}}'
+          
       loop:
         - name: kloadbalancer1
           cpus: 1
           mem: 1GB
           disk: 4GB
           ip: 192.168.50.20
+          as_vm: false
+          skip:  false
           force_destroy: false
+          
+
         - name: kmaster1
           cpus: 2
           mem: 2GB
           disk: 4GB
           ip: 192.168.50.21
+          as_vm: true
+          skip:  false
           force_destroy: false
+
         - name: kmaster2
           cpus: 2 
           mem: 2GB
           disk: 4GB
           ip: 192.168.50.22
+          as_vm: true
+          skip:  false
           force_destroy: false
+
         - name: knode1
           cpus: 1 
           mem: 1GB
           disk: 4GB
           ip: 192.168.50.31
+          as_vm: true
+          skip:  false
           force_destroy: false
+
         - name: knode2
           cpus: 2 
           mem: 2GB
           disk: 4GB
           ip: 192.168.50.32
+          as_vm: true
+          skip:  false
           force_destroy: false
+
         - name: knode3
           cpus: 4 
           mem: 8GB
           disk: 4GB
           ip: 192.168.50.33
+          as_vm: true
+          skip:  false
           force_destroy: false
+
         - name: knode4
           cpus: 8 
           mem: 10GB
           disk: 4GB
           ip: 192.168.50.34
+          as_vm: true
+          skip:  false
           force_destroy: false
+
       loop_control:
         loop_var: spec
 
