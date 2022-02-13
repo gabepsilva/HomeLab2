@@ -87,10 +87,32 @@
       shell: sleep 60
       delegate_to: 127.0.0.1
 
+
 - hosts: k8s
   become: true
 
   roles:
     - base
+
+- hosts: nodes
+  become: true
+
+  roles:
     - docker
     - kubernetes
+
+
+- hosts: kloadbalancers
+  become: true
+
+  tasks:
+    - include_tasks: kloadbalancer-setup.yml
+  
+
+- hosts: kmaster1
+  become: true
+
+  tasks:
+    - include_tasks: control-plane-setup.yml
+
+
