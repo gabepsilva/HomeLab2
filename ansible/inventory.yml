@@ -36,22 +36,30 @@ all:
     k8s:
       children:
 
-        masters:
-          hosts:
-            kmaster1:
-              ansible_host: kmaster1.psilva.org
-            kmaster2:
-              ansible_host: kmaster2.psilva.org
-              
         nodes:
+          children:
+
+            masters:
+              hosts:
+                kmaster1:
+                  ansible_host: kmaster1.psilva.org
+                kmaster2:
+                  ansible_host: kmaster2.psilva.org
+
+            workers:
+              hosts:
+                knode1:
+                  ansible_host: knode1.psilva.org
+                knode2:
+                  ansible_host: knode2.psilva.org
+                knode3:
+                  ansible_host: knode3.psilva.org
+                knode4:
+                  ansible_host: knode4.psilva.org
+
+        kloadbalancers:
           hosts:
-            knode1:
-              ansible_host: knode1.psilva.org
-            knode2:
-              ansible_host: knode2.psilva.org
-            knode3:
-              ansible_host: knode3.psilva.org
-            knode4:
-              ansible_host: knode4.psilva.org
+            kloadbalancer1:
+              ansible_host: kloadbalancer1.psilva.org
       vars:
         ansible_ssh_user: kube

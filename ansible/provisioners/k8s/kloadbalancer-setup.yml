@@ -1,0 +1,35 @@
+---
+
+- name: "ss"
+  shell: date
+
+- name: Install HAProxy
+  package:
+    name: 'haproxy'
+    state: 'latest'
+    update_cache: yes
+    autoclean: yes
+
+- name: Append HAProxy configs
+  lineinfile:
+    path: /etc/haproxy/haproxy.cfg 
+    insertbefore: EOF
+    line: |
+      frontend kubernetes-frontend
+        bind *:6443
+        mode tcp
+        option tcplog
+        default_backend kubernetes-backend
+
+      backend kubernetes-backend
+        option httpchk GET /healthz
+        http-check expect status 200
+        mode tcp
+        option ssl-hello-chk
+        balance roundrobin
+          server kmaster1 kmaster1.psilva.org:6443 check fall 3 rise 2
+          server kmaster2 kmaster2.psilva.org:6443 check fall 3 rise 2
+
+
+- name: Restart HAProxy
+  service: name=haproxy state=restarted
