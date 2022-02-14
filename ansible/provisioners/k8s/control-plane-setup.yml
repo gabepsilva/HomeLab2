@@ -34,3 +34,40 @@
     - kubectl apply -f https://docs.projectcalico.org/manifests/custom-resources.yaml
   register: calico_result
   changed_when: "'created' in calico_result.stdout"
+
+- name: Create MetalLB configs file
+  tags: [metal]
+  file:
+    path: "/tmp/metallb-config.cm"
+    state: touch
+
+- name: Append MetalLB configs
+  tags: [metal]
+  lineinfile:
+    path: /tmp/metallb-config.cm
+    insertbefore: EOF
+    line: |
+      apiVersion: v1
+      kind: ConfigMap
+      metadata:
+        namespace: metallb-system
+        name: config
+      data:
+        config: |
+          address-pools:
+          - name: default
+            protocol: layer2
+            addresses:
+            - 192.168.50.40-192.168.50.120
+  
+- name: Configure Metal LoadBalancer
+  tags: [metal]
+  command: "{{ item }}"
+  with_items:
+    - kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.11.0/manifests/namespace.yaml
+    - kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.11.0/manifests/metallb.yaml
+    - kubectl apply -f /tmp/metallb-config.cm
+  register: metallb_result
+  changed_when: "'created' in metallb_result.stdout"
+
+
