@@ -1,5 +1,6 @@
 ---
 - hosts: captain
+  gather_facts: false
 
   tasks:
 
@@ -90,29 +91,35 @@
 
 - hosts: k8s
   become: true
-
   roles:
     - base
 
+
 - hosts: nodes
   become: true
-
+  gather_facts: false
   roles:
     - docker
     - kubernetes
 
 
+- hosts: masters
+  become: true
+  gather_facts: false
+  roles:
+    - helm
+
+
 - hosts: kloadbalancers
   become: true
-
+  gather_facts: false
   tasks:
     - include_tasks: kloadbalancer-setup.yml
   
 
 - hosts: kmaster1
   become: true
+  gather_facts: false
 
   tasks:
     - include_tasks: control-plane-setup.yml
-
-

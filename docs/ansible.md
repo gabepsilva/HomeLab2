@@ -1,5 +1,6 @@
 # Ansible Variables
 
+ANSIBLE_CONFIG=ansible/ansible.cfg 
 ANSIBLE_ROLES_PATH=./ansible/roles/
 ANSIBLE_STDOUT_CALLBACK=debug 
 ANSIBLE_HOST_KEY_CHECKING=False
