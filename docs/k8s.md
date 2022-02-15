@@ -5,3 +5,13 @@
 
 fix: memberlist
 - kubectl create secret generic -n metallb-system memberlist --from-literal=secretkey="$(openssl rand -base64 128)"
+
+#dashboard
+https://github.com/kubernetes/dashboard
+https://computingforgeeks.com/create-admin-user-to-access-kubernetes-dashboard/
+ ** see make file to get token
+
+ Need to add dashboard to ansible instad of manual installation
+
+ 
+
