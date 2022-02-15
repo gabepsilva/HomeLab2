@@ -24,11 +24,11 @@ spec:
             - containerPort: 5201
           resources:
             limits:
-              memory: 400Mi
-              cpu:  800m
+              memory: 30Mi
+              cpu:  600m
             requests:
-              memory: 200Mi
-              cpu: 400m
+              memory: 10Mi
+              cpu: 300m
 
 ---
 apiVersion: v1

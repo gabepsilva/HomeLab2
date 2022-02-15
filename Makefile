@@ -17,3 +17,5 @@ clean-known-hosts: ## Clear some host´s keys
 	@ssh-keygen -R jenkins.psilva.org
 	@ssh-keygen -R jenkins-node1.psilva.org
 
+dashboard-token:
+	kubectl -n kube-system describe secret $$(kubectl -n kube-system get secret | grep ${SA_NAME} | awk '{print $$1}')
