@@ -1,4 +1,7 @@
 ---
+
+######## CREATE ALL NODES ########
+
 - hosts: captain
   gather_facts: false
 
@@ -88,12 +91,14 @@
       shell: sleep 60
       delegate_to: 127.0.0.1
 
+######## INSTALL BASE ########
 
 - hosts: k8s
   become: true
   roles:
     - base
 
+######## INSTALL DOCKER + K8S ########
 
 - hosts: nodes
   become: true
@@ -102,6 +107,7 @@
     - docker
     - kubernetes
 
+######## INSTALL HELM ########
 
 - hosts: masters
   become: true
@@ -109,6 +115,31 @@
   roles:
     - helm
 
+######## INSTALL AND MOUNT NFS SHARES ########
+
+- hosts: workers
+  become: true
+  gather_facts: false
+
+  tasks:
+    - name: Install nfs-common
+      package:
+        name: nfs-common
+        state: 'latest'
+
+    - name: Create a mountable directory 
+      file:
+        path: /mnt/bob-cached
+        state: directory
+        mode: '0755'
+
+    - name: Mount volume and mount on boot
+      shell: |
+        echo "bob.psilva.org:/mnt/user/k8scached /mnt/bob-cached  nfs      defaults    0       0" >> /etc/fstab
+        mount -av
+        
+
+######## SETUP LOAD BALANCER ########
 
 - hosts: kloadbalancers
   become: true
@@ -116,6 +147,7 @@
   tasks:
     - include_tasks:  tasks/kloadbalancer-setup.yml
   
+######## INSTALL INITIALIZE MASTER 1 ########
 
 - hosts: kmaster1
   become: true

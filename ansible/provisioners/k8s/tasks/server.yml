@@ -40,7 +40,7 @@
       lxc profile remove {{ name }} default
       lxc config set {{ name }} limits.cpu {{cpus}}
       lxc config set {{ name }} limits.memory {{mem}}
-      lxc start {{ name }} &
+      lxc start {{ name }} 
 
   rescue:
   - name: "{{ name }}: Delete resources created"

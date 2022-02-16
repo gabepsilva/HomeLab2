@@ -20,11 +20,12 @@
     state: directory
     mode: 0755
 
-- name: Symlink the kubectl admin.conf to ~/.kube/conf.
-  file:
+- name: Copy kubectl admin.conf to ~/.kube/conf.
+  ansible.builtin.copy:
     src: /etc/kubernetes/admin.conf
     dest: ~/.kube/config
-    mode: 0400
+    mode: u=rwx,g=rx,o=rx # 755
+    remote_src: yes
 
 - name: Configure Calico networking.
   command: "{{ item }}"
@@ -33,13 +34,19 @@
     - kubectl apply -f https://docs.projectcalico.org/manifests/custom-resources.yaml
   register: calico_result
   changed_when: "'created' in calico_result.stdout"
+
+
+- name: "Copy metallb configmap"
+  ansible.builtin.copy:
+    src: files/metallb-configmap.yaml 
+    dest: /tmp/metallb-configmap.yaml
   
 - name: Configure Metal LoadBalancer
   command: "{{ item }}"
   with_items:
     - kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.11.0/manifests/namespace.yaml
     - kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.11.0/manifests/metallb.yaml
-    - kubectl apply -f files/metallb-configmap.yaml
+    - kubectl apply -f /tmp/metallb-configmap.yaml
     - kubectl create secret generic -n metallb-system memberlist --from-literal=secretkey="$(openssl rand -base64 128)"
   register: metallb_result
   changed_when: "'created' in metallb_result.stdout"
