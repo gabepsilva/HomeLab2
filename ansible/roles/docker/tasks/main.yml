@@ -1,7 +1,9 @@
 ---
 
 - name: Install required system packages
-  package: name={{ item }} state=latest update_cache=true
+  package:
+    name: '{{ item }}'
+    state: latest
   loop: ['ca-certificates', 'curl', 'lsb-release', 'gnupg2']
 
 - name: Add Docker GPG apt Key
@@ -60,7 +62,7 @@
   command:
     cmd: apt-get clean
 
-- name: Ensure group "docker"
+- name: Ensure group 'docker'
   ansible.builtin.group:
     name: docker
     state: present

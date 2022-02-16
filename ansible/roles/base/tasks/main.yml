@@ -4,7 +4,8 @@
 
 - name: Install Utils
   package:
-    name: '{{ item }}' state=latest
+    name: '{{ item }}'
+    state: latest
   loop: ['git', 'curl', 'cron', 'jq', 'htop', 'sysstat']
 
 - name: Install gotop
