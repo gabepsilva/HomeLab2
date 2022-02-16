@@ -1,7 +1,7 @@
 ---
 
 - name: Install required system packages
-  package: name={{ item }} state=latest update_cache=yes 
+  package: name={{ item }} state=latest update_cache=true
   loop: ['ca-certificates', 'curl', 'lsb-release', 'gnupg2']
 
 - name: Add Docker GPG apt Key
@@ -20,11 +20,10 @@
 
 - name: Install Docker
   apt:
-    update_cache: yes
+    update_cache: true
     state: latest
     name: '{{ item }}'
   loop:
-    #- containerd.io 
     - docker-ce
     - docker-ce-cli
 
@@ -39,7 +38,7 @@
 - name: creates /etc/docker/daemon.json
   ansible.builtin.file:
     path: /etc/docker/daemon.json
-    state: touch   
+    state: touch
 
 - name: Create daemon json config file
   ansible.builtin.lineinfile:
@@ -61,7 +60,7 @@
   command:
     cmd: apt-get clean
 
-- name: Ensure group "docker" 
+- name: Ensure group "docker"
   ansible.builtin.group:
     name: docker
     state: present
@@ -70,4 +69,4 @@
   user:
     name: '{{ ansible_ssh_user }}'
     groups: docker
-    append: yes
+    append: true

@@ -1,11 +1,9 @@
 ---
-# tasks file for helm
-
 - name: Fetch Helm
   unarchive:
     src: https://get.helm.sh/helm-v3.8.0-linux-amd64.tar.gz
     dest: /tmp
-    remote_src: yes
+    remote_src: true
 
 - name: "Install Helm"
   ansible.builtin.copy:

@@ -1,3 +1,4 @@
+---
 config:
   user.user-data: |
     #cloud-config
@@ -24,7 +25,7 @@ config:
 
     bootcmd:
       - date > /etc/server_release
-      
+
   user.network-config: |
     version: 1
     config:

@@ -3,12 +3,12 @@
   package:
     name: 'haproxy'
     state: 'latest'
-    update_cache: yes
-    autoclean: yes
+    update_cache: true
+    autoclean: true
 
 - name: Append HAProxy configs
   lineinfile:
-    path: /etc/haproxy/haproxy.cfg 
+    path: /etc/haproxy/haproxy.cfg
     insertbefore: EOF
     line: |
       frontend kubernetes-frontend

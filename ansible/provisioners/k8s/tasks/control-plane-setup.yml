@@ -24,8 +24,8 @@
   ansible.builtin.copy:
     src: /etc/kubernetes/admin.conf
     dest: ~/.kube/config
-    mode: u=rwx,g=rx,o=rx # 755
-    remote_src: yes
+    mode: u=rwx,g=rx,o=rx  # 755
+    remote_src: true
 
 - name: Configure Calico networking.
   command: "{{ item }}"
@@ -38,9 +38,9 @@
 
 - name: "Copy metallb configmap"
   ansible.builtin.copy:
-    src: files/metallb-configmap.yaml 
+    src: files/metallb-configmap.yaml
     dest: /tmp/metallb-configmap.yaml
-  
+
 - name: Configure Metal LoadBalancer
   command: "{{ item }}"
   with_items:
@@ -50,5 +50,3 @@
     - kubectl create secret generic -n metallb-system memberlist --from-literal=secretkey="$(openssl rand -base64 128)"
   register: metallb_result
   changed_when: "'created' in metallb_result.stdout"
-
-

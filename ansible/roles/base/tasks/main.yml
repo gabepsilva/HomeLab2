@@ -1,21 +1,14 @@
 ---
 - name: Update apt cache
-  package: state=latest update_cache=yes 
+  package: state=latest update_cache=true
 
 - name: Install Utils
   package:
-    name: '{{ item }}'
-    state: 'latest'
-    update_cache: yes
-    autoclean: yes
-  loop: [ 'git', 'curl', 'cron', 'jq', 'htop', 'sysstat']
+    name: '{{ item }}' state=latest
+  loop: ['git', 'curl', 'cron', 'jq', 'htop', 'sysstat']
 
 - name: Install gotop
   unarchive:
     src: https://github.com/xxxserxxx/gotop/releases/download/v4.1.2/gotop_v4.1.2_linux_386.tgz
     dest: /usr/bin
-    remote_src: yes
-
-- name: "clean cache"
-  command: apt-get clean
-  when: ansible_distribution in ['Debian', 'Ubuntu']
+    remote_src: true
