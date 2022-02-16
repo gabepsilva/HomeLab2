@@ -6,7 +6,6 @@
   gather_facts: false
 
   tasks:
-
     - name: Provision Load Balancer
       include_tasks: tasks/server.yml
       vars:
@@ -95,6 +94,8 @@
 
 - hosts: k8s
   become: true
+  gather_facts: false
+  
   roles:
     - base
 
@@ -162,7 +163,10 @@
 
 
 ######## CLEAN UP ########
+- hosts: k8s
+  become: true
 
-- name: "clean cache"
-  command: apt-get clean
-  when: ansible_distribution in ['Debian', 'Ubuntu']
+  tasks:
+    - name: "clean cache"
+      command: apt-get clean
+      when: ansible_distribution in ['Debian', 'Ubuntu']
