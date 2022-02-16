@@ -1,8 +1,4 @@
 ---
-
-- name: "ss"
-  shell: date
-
 - name: Install HAProxy
   package:
     name: 'haproxy'
@@ -29,7 +25,6 @@
         balance roundrobin
           server kmaster1 kmaster1.psilva.org:6443 check fall 3 rise 2
           server kmaster2 kmaster2.psilva.org:6443 check fall 3 rise 2
-
 
 - name: Restart HAProxy
   service: name=haproxy state=restarted
