@@ -6,7 +6,7 @@
   package:
     name: '{{ item }}'
     state: latest
-  loop: ['git', 'curl', 'cron', 'jq', 'htop', 'sysstat']
+  loop: ['git', 'curl', 'cron', 'jq', 'htop', 'sysstat', 'nfs-common']
 
 - name: Install gotop
   unarchive:
