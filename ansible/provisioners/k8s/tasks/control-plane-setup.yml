@@ -35,18 +35,26 @@
   register: calico_result
   changed_when: "'created' in calico_result.stdout"
 
-
 - name: "Copy metallb configmap"
   ansible.builtin.copy:
-    src: files/metallb-configmap.yaml
-    dest: /tmp/metallb-configmap.yaml
+    src: files
+    dest: /tmp
 
 - name: Configure Metal LoadBalancer
   command: "{{ item }}"
   with_items:
     - kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.11.0/manifests/namespace.yaml
     - kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.11.0/manifests/metallb.yaml
-    - kubectl apply -f /tmp/metallb-configmap.yaml
+    - kubectl apply -f /tmp/files/metallb-configmap.yaml
     - kubectl create secret generic -n metallb-system memberlist --from-literal=secretkey="$(openssl rand -base64 128)"
   register: metallb_result
   changed_when: "'created' in metallb_result.stdout"
+
+- name: Configure BOB as NFS Storage Class
+  command: "{{ item }}"
+  with_items:
+    - kubectl apply -f /tmp/files/nfs-subdir-external-provisioner/rbac.yaml
+    - kubectl apply -f /tmp/files/nfs-subdir-external-provisioner/class.yaml
+    - kubectl apply -f /tmp/files/nfs-subdir-external-provisioner/deployment.yaml
+  register: bob_nfs_config
+  changed_when: "'created' in bob_nfs_config.stdout"
