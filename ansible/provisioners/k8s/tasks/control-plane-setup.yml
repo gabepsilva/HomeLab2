@@ -2,7 +2,7 @@
 - name: Initialize Kubernetes master with kubeadm init
   command: >
     kubeadm init \
-    --pod-network-cidr=192.168.0.0/16 \
+    --pod-network-cidr=10.200.0.0/16 \
     --upload-certs \
     --control-plane-endpoint=kloadbalancer1.psilva.org
   register: kubeadmin_init
@@ -27,18 +27,18 @@
     mode: u=rwx,g=rx,o=rx  # 755
     remote_src: true
 
+- name: "Copy config files to node"
+  ansible.builtin.copy:
+    src: files
+    dest: /tmp
+
 - name: Configure Calico networking.
   command: "{{ item }}"
   with_items:
     - kubectl apply -f https://projectcalico.docs.tigera.io/manifests/tigera-operator.yaml
-    - kubectl apply -f https://docs.projectcalico.org/manifests/custom-resources.yaml
+    - kubectl apply -f /tmp/files/calico-custom-resources.yaml
   register: calico_result
   changed_when: "'created' in calico_result.stdout"
-
-- name: "Copy metallb configmap"
-  ansible.builtin.copy:
-    src: files
-    dest: /tmp
 
 - name: Configure Metal LoadBalancer
   command: "{{ item }}"
