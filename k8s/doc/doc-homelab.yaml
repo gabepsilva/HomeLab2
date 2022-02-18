@@ -1,0 +1,36 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: doc-homelab
+  labels:
+    app: doc-homelab
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: doc-homelab
+  template:
+    metadata:
+      labels:
+        app: doc-homelab
+    spec:
+      containers:
+        - name: doc-homelab
+          image: ghcr.io/gasilva-clgx/homelab-docs:latest
+          ports:
+            - containerPort: 80
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: doc-homelab
+spec:
+  selector:
+    app: doc-homelab
+  ports:
+    - port: 80
+      targetPort: 80
+  type: LoadBalancer
+  loadBalancerIP: 192.168.50.43
