@@ -1,9 +1,0 @@
----
-
-- hosts: k8s
-  become: true
-
-  roles:
-    - base
-    - docker
-    - kubernetes
