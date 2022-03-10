@@ -11,6 +11,7 @@
     path: /etc/haproxy/haproxy.cfg
     insertbefore: EOF
     line: |
+    
       frontend kubernetes-frontend
         bind *:6443
         mode tcp
