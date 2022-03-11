@@ -1,0 +1,32 @@
+label='jk-worker-pod'
+podTemplate(
+    label: label,
+    containers: [
+        containerTemplate(
+            name: 'jnlp',
+            
+            image: 'ghcr.io/gasilva-clgx/jnlp-slave:latest',
+            runAsUser: 'root',
+            workingDir: '/home/jenkins',
+            resourceRequestCpu: '800m',
+            resourceLimitCpu: '8000m',
+            resourceRequestMemory: '4Gi',
+            resourceLimitMemory: '8Gi',
+        )
+    ],
+    volumes: [
+        hostPathVolume(hostPath: '/usr/bin/docker', mountPath: '/usr/bin/docker'),
+        hostPathVolume(hostPath: '/var/run/docker.sock', mountPath: '/var/run/docker.sock')
+    ]
+) {
+    node(label) {
+
+        stage('Output debug info') {
+            sh('cat /etc/*release*')
+        }
+        
+        stage('Preparation'){
+            sh 'date'
+        }
+    }
+}
