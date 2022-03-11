@@ -1,0 +1,9 @@
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  args: 
+  - 'build'
+  - '--tag=gcr.io/$PROJECT_ID/rest2:latest'
+  - '--file=apps/rest2/Dockerfile'
+  - 'apps/rest2/'
+
+images: ['gcr.io/$PROJECT_ID/rest2:latest']

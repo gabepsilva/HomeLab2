@@ -35,8 +35,8 @@ variable "containers" {
       name      = "knode1"
       fqdn      = "knode1.psilva.org" 
       ip        = "192.168.50.31"
-      cpu       = 2
-      mem       = "2GB"
+      cpu       = 1
+      mem       = "4GB"
     }
     ,
     {
@@ -44,7 +44,7 @@ variable "containers" {
       fqdn      = "knode2.psilva.org" 
       ip        = "192.168.50.32"
       cpu       = 2
-      mem       = "2GB"
+      mem       = "4GB"
     }
     ,
     {

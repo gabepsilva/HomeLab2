@@ -51,6 +51,7 @@ ansible-playbook  k8s/provision/ansible/k8s-cluster.yml
 
 #### Whats next?
 
+-  [Adding nodes and masters](../services/README.md)
 -  [Deploy services](../services/README.md)
 
 
