@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: path-based-ingress
+  namespace: default
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: demo.psilva.org
+    http:
+      paths:
+      - path: /rest1
+        pathType: Prefix
+        backend:
+          service:
+            name: rest1-svc
+            port:
+              number: 80
+      - path: /rest2
+        pathType: Prefix
+        backend:
+          service:
+            name: rest2-svc
+            port:
+              number: 3000
+        
+        

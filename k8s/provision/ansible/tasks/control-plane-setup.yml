@@ -56,6 +56,13 @@
   tags:
     - calico
 
+- name: Install Nginx Controler
+  command: "{{ item }}"
+  with_items:
+    kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.1.1/deploy/static/provider/cloud/deploy.yaml
+  tags:
+    - nginx
+
 - name: Configure Metal LoadBalancer
   command: "{{ item }}"
   with_items:
