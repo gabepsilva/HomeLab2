@@ -5,6 +5,11 @@ metadata:
   namespace: default
 spec:
   ingressClassName: nginx
+  defaultBackend:
+    service:
+      name: rest2-svc
+      port:
+        number: 3000
   rules:
   - host: demo.psilva.org
     http:

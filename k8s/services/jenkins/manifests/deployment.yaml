@@ -29,11 +29,11 @@ spec:
             httpGet:
               path: /login
               port: 8080
-            initialDelaySeconds: 300
+            initialDelaySeconds: 600
             periodSeconds: 10
             timeoutSeconds: 5
             successThreshold: 2
-            failureThreshold: 5
+            failureThreshold: 10
           volumeMounts:
             - name: nfs-pvc
               mountPath: /var/jenkins_home
