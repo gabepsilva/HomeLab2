@@ -20,7 +20,7 @@ variable "containers" {
       fqdn      = "kmaster1.psilva.org" 
       ip        = "192.168.50.21"
       cpu       = 2
-      mem       = "2GB"
+      mem       = "3GB"
     }
     ,
     {
@@ -28,14 +28,14 @@ variable "containers" {
       fqdn      = "kmaster2.psilva.org" 
       ip        = "192.168.50.22"
       cpu       = 2
-      mem       = "2GB"
+      mem       = "3GB"
     }
     ,
     {
       name      = "knode1"
       fqdn      = "knode1.psilva.org" 
       ip        = "192.168.50.31"
-      cpu       = 1
+      cpu       = 2
       mem       = "4GB"
     }
     ,
@@ -43,24 +43,16 @@ variable "containers" {
       name      = "knode2"
       fqdn      = "knode2.psilva.org" 
       ip        = "192.168.50.32"
-      cpu       = 2
-      mem       = "4GB"
+      cpu       = 4
+      mem       = "6GB"
     }
     ,
     {
       name      = "knode3"
       fqdn      = "knode3.psilva.org" 
       ip        = "192.168.50.33"
-      cpu       = 4
-      mem       = "4GB"
-    }
-    ,
-    {
-      name      = "knode4"
-      fqdn      = "knode4.psilva.org" 
-      ip        = "192.168.50.34"
       cpu       = 8
-      mem       = "8GB"
+      mem       = "6GB"
     }
 ]
 }

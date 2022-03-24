@@ -49,6 +49,16 @@ cd ../../..
 ansible-playbook  k8s/provision/ansible/k8s-cluster.yml
 ```
 
+### ssh test
+```bash
+ssh kube@kloadbalancer1.psilva.org 'cat /etc/server_release'
+ssh kube@kmaster1.psilva.org 'cat /etc/server_release'
+ssh kube@kmaster2.psilva.org 'cat /etc/server_release'
+ssh kube@knode1.psilva.org 'cat /etc/server_release'
+ssh kube@knode2.psilva.org 'cat /etc/server_release'
+ssh kube@knode3.psilva.org 'cat /etc/server_release'
+```
+
 #### Whats next?
 
 -  [Adding nodes and masters](../services/README.md)

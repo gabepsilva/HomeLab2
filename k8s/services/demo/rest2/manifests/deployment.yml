@@ -20,4 +20,4 @@ spec:
       - name: "rest2"
         image: "ghcr.io/gasilva-clgx/rest2:latest"
         ports:
-          - containerPort: 3000
+          - containerPort: 3001
