@@ -1,0 +1,19 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: iperf3
+  namespace: iperf3-ns
+  labels:
+    env: prod
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: iperf3-svc
+  namespace: iperf3-ns
+  labels:
+    env: prod
+spec:
+  loadBalancerIP: 192.168.49.100

@@ -1,0 +1,66 @@
+---
+all:
+  children:
+
+    services:
+      hosts:
+        adguard:
+          ansible_host: 192.168.49.1
+          dns: dns1.psilva.org
+
+    servers:
+      children:
+
+        onprem:
+          children:
+
+            desktops:
+              hosts:
+                bob:
+                  ansible_host: 192.168.50.172
+                  dns: bob.psilva.org
+                captain:
+                  ansible_host: 192.168.48.3
+                  dns: captain.psilva.org
+              vars:
+                ansible_ssh_user: "gabriel"
+
+            pis:
+              hosts:
+                piter:
+                  ansible_host: 192.168.48.2
+                  dns: piter.psilva.org
+              vars:
+                ansible_ssh_user: "pi"
+
+        cloud:
+          hosts:
+
+    k8s:
+      children:
+
+        loadbalancers:
+          hosts:
+            loadbalancer1:
+              ansible_host: 192.168.49.211
+              dns: master1.psilva.org
+
+        nodes:
+          children:
+
+            masters:
+              hosts:
+                master1:
+                  ansible_host: 192.168.49.211 
+                  dns: master1.psilva.org
+
+            workers:
+              hosts:
+                node1:
+                  ansible_host: 192.168.49.221
+                  dns: node1.psilva.org
+                node2:
+                  ansible_host: 192.168.49.222
+                  dns: node2.psilva.org     
+      vars:
+        ansible_ssh_user: kube

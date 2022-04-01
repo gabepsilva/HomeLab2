@@ -1,0 +1,17 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: iperf3
+  namespace: gabe-apps
+  labels:
+    env: dev
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: iperf3
+  namespace: gabe-apps
+  labels:
+    env: dev

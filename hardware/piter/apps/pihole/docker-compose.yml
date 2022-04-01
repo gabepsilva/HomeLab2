@@ -1,0 +1,29 @@
+version: '3.2'
+
+networks:
+  macvlan24:
+    external: true
+
+services:
+
+  adguardhome:
+    image: pihole/pihole
+    container_name: pihole
+    restart: unless-stopped
+    mac_address: 02:42:C0:A8:32:1C
+    ports:
+      - 53:53/tcp
+      - 53:53/udp
+      - 67:67/udp
+      - 68:68/udp
+      - 80:80/tcp 
+    volumes:
+      - /home/pi/pihole/etc-pihole:/etc/pihole
+      - /home/pi/pihole/etc-dnsmasq.d:/etc/dnsmasq.d
+    environment:
+      - TZ=America/Toronto
+    networks:
+      macvlan24:
+        ipv4_address: 192.168.49.2
+      
+

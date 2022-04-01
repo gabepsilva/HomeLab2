@@ -1,0 +1,53 @@
+
+---
+- hosts: piter
+  become: true
+  gather_facts: false
+  
+  roles:
+    - base
+    - docker
+
+  tasks:
+
+  - name: enable cgroups (restart)
+    tags: system-user
+    command: "{{ item }}"
+    with_items:
+      - echo cgroup_enable=cpuset cgroup_enable=memory cgroup_memory=1 >> /boot/cmdline.txt
+
+  - name: set timezone
+    timezone:
+      name: America/Toronto
+
+  - name: Set a hostname
+    tags: system-user
+    ansible.builtin.hostname:
+      name: piter
+
+  - name: SYSTEM - Set authorized key
+    tags: system-user 
+    authorized_key:
+      user: pi
+      state: present
+      key: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICST/387GTgu9qAPn92kzTsEyaXu6fdPryg4z+1azovj gabriel@marim
+
+  - name: Install docker-compose 2.3.3
+    get_url: 
+      url : "https://github.com/docker/compose/releases/download/v2.3.3/docker-compose-linux-armv7"
+      dest: /usr/local/bin/docker-compose
+      mode: 'a+x'
+      force: yes
+
+  - name: Create docker network macvlan
+    tags: system-user
+    command: "{{ item }}"
+    with_items:
+      -  docker network create -d macvlan --subnet=192.168.50.0/20 --gateway=192.168.50.1 --ip-range=192.168.49.0/24 -o parent=eth0 macvlan24
+
+  - name: Change user password
+    tags: system-user
+    user:
+      name: pi
+      update_password: always
+      password: "{{ newpassword|password_hash('sha512') }}"

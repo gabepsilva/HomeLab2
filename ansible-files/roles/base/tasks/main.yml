@@ -1,4 +1,10 @@
 ---
+- name: Create DNS symbolic link 
+  file:
+    src: /run/systemd/resolve/resolv.conf
+    dest: /etc/resolv.conf
+    state: link
+
 - name: Update apt cache
   package: state=latest update_cache=true
 

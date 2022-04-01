@@ -18,17 +18,21 @@ My home lab runs will win 95% of my workload on-prem, and Google Cloud will be u
 Preping...
 ```bash
 # password for LXD api servive
-export TF_VAR_lxc_password=123
+export TF_VAR_lxc_password=<password>
 # GCP cloud storage to secure all Terraform state files
 export GOOGLE_APPLICATION_CREDENTIALS=</path/to/key.json>
 ```
 
-Installing...
+
+
+### Terraform apply for DEV and PROD
+
 ```bash 
-cd k8s/provision/terraform
-terraform init
+cd k8s/provision/prod
+#cd k8s/provision/develop
+terraform init 
 terraform plan
-terraform apply --auto-approve
+#terraform apply --auto-approve
 ```
 
 ## Ansible setup
@@ -37,27 +41,36 @@ Terraform just provisioned raw 'servers' now we need to transform those into K8s
 
 Good thing the Terraform scripts already copied my personal public key inside the `$HOME/.ssh/authorized_keys` file in each  server
 
-Preping...
+**Preping...**
 ```bash
 export ANSIBLE_CONFIG=ansible-files/ansible.cfg
 ```
 
-Running...
+**Running...**
 ```bash
 # cd to the root folder of the project after applying Terraform
 cd ../../..
-ansible-playbook  k8s/provision/ansible/k8s-cluster.yml
+# TODO: Fix line 3 in `k8s/provision/shared/ansible/tasks/control-plane-setup.yml`
+# Fixing manually on deployments
+#ansible-playbook -i ansible-files/prod-inventory.yml  k8s/provision/shared/ansible/k8s-cluster.yml
+ansible-playbook -i ansible-files/dev-inventory.yml  k8s/provision/shared/ansible/k8s-cluster.yml
+
 ```
 
-### ssh test
+## Get the kubectl config file
+
 ```bash
-ssh kube@kloadbalancer1.psilva.org 'cat /etc/server_release'
-ssh kube@kmaster1.psilva.org 'cat /etc/server_release'
-ssh kube@kmaster2.psilva.org 'cat /etc/server_release'
-ssh kube@knode1.psilva.org 'cat /etc/server_release'
-ssh kube@knode2.psilva.org 'cat /etc/server_release'
-ssh kube@knode3.psilva.org 'cat /etc/server_release'
+echo $(ssh kube@master1.dev.psilva.org 'sudo cat /root/.kube/config | base64') | base64 -d > $HOME/.kube/config-dev
+echo $(ssh kube@master1.psilva.org 'sudo cat /root/.kube/config | base64') | base64 -d > $HOME/.kube/config-prod
+
+# Add this to your equivalent of ~/.bashrc or ~/.zshrc
+echo 'export KUBECONFIG=$HOME/.kube/config-dev:$HOME/.kube/config-prod' >> ~/.zshrc
+#source ~/.bashrc
+source ~/.zshrc
 ```
+
+Do not forget to manage your contexts
+https://devopstales.github.io/kubernetes/kubectl-multi-cluster-config/
 
 #### Whats next?
 
