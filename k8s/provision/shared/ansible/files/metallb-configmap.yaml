@@ -10,4 +10,5 @@ data:
     - name: default
       protocol: layer2
       addresses:
-      - 192.168.49.1-192.168.51.254
+      - {metal_lb_range}
+#92.168.49.1-192.168.51.2541

@@ -1,0 +1,59 @@
+---
+
+- name: "Copy config files to node"
+  ansible.builtin.copy:
+    src: files
+    dest: /tmp
+  tags:
+    - kube_config
+
+- name: Prepare metal lb config
+  ansible.builtin.replace:
+    path: /tmp/files/metallb-configmap.yaml
+    regexp: '{metal_lb_range}'
+    replace: '{{metal_lb_range}}'
+    
+
+- name: Configure Calico networking.
+  command: "{{ item }}"
+  with_items:
+    - kubectl apply -f https://projectcalico.docs.tigera.io/manifests/tigera-operator.yaml
+    - kubectl apply -f /tmp/files/calico-custom-resources.yaml
+  register: calico_result
+  changed_when: "'created' in calico_result.stdout"
+  tags:
+    - calico
+
+- name: Configure Metal LoadBalancer
+  command: "{{ item }}"
+  with_items:
+    - kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.11.0/manifests/namespace.yaml
+    - kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.11.0/manifests/metallb.yaml
+    - kubectl apply -f /tmp/files/metallb-configmap.yaml
+    - kubectl create secret generic -n metallb-system memberlist --from-literal=secretkey="$(openssl rand -base64 128)"
+  register: metallb_result
+  changed_when: "'created' in metallb_result.stdout"
+  tags:
+    - lb
+
+# - name: Install Nginx Controler
+#   command: "{{ item }}"
+#   with_items:
+#     kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.1.1/deploy/static/provider/cloud/deploy.yaml
+#   tags:
+#     - nginx
+
+
+
+# - name: Configure BOB as NFS Storage Class
+#   command: "{{ item }}"
+#   with_items:
+#     - kubectl apply -f /tmp/files/nfs-subdir-external-provisioner/rbac.yaml
+#     - kubectl apply -f /tmp/files/nfs-subdir-external-provisioner/class.yaml
+#     - kubectl apply -f /tmp/files/nfs-subdir-external-provisioner/deployment.yaml
+#   register: bob_nfs_config
+#   changed_when: "'created' in bob_nfs_config.stdout"
+#   tags:
+#     - nfs
+
+

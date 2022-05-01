@@ -1,10 +1,12 @@
 ---
+
 ######## INSTALL BASE ########
 
 - hosts: nodes
   become: true
   gather_facts: false
-  
+  tags:
+    - base
   roles:
     - base
 
@@ -23,6 +25,8 @@
 - hosts: nodes
   become: true
   gather_facts: false
+  tags:
+    - cluster_member
   roles:
     - docker
     - kubernetes
@@ -33,121 +37,64 @@
 - hosts: masters
   become: true
   gather_facts: false
+  tags:
+    - helm
   roles:
     - helm
     # install istio binaries here
-
-
 
 
 ####### INSTALL INITIALIZE MASTER 1 ########
 
 - hosts: master1
   become: true
-  gather_facts: false
-
-  tasks:
-    - include_tasks: tasks/control-plane-setup.yml
+  gather_facts: true
   tags:
     - control_plane
+  tasks:
+    - include_vars: "{{vars_file}}"
+    - include_tasks: tasks/control-plane-setup.yml
 
 
+####### All join the cluster  #######
+- name: Include a play after another play
+  import_playbook: nodes-join.yml
 
-####### INSTALL OTHER MASTERS ########
+
+####### INSTALL COMPONENTS ########
 
 - hosts: master1
   become: true
-  gather_facts: false
-
+  gather_facts: true
+  tags:
+    - control_plane_components
   tasks:
-
-    - name: Get master join command
-      command: >
-        bash -c "grep -A 3 'kubeadm join' /root/kube-join.txt | head -3 | tr '\\\\\t\n' ' '"
-      register: master_join
-      tags:
-        - masters_join
-
-    - name: Get worker join command
-      command: >
-        bash -c "grep -A 3 'kubeadm join' /root/kube-join.txt | tail -2 | tr '\\\\\t\n' ' '"
-      register: worker_join
-      tags:
-        - worker_join
-
-    - name: create masters script
-      become: false
-      copy:
-        content: "{{ master_join.stdout }}"
-        dest: "/tmp/master.sh"
-      delegate_to: localhost
-      tags:
-        - masters_join
-
-    - name: create workers script
-      become: false
-      copy:
-        content: "{{ worker_join.stdout }}"
-        dest: "/tmp/worker.sh"
-      delegate_to: localhost
-      tags:
-        - worker_join
+    - include_vars: "{{vars_file}}"
+    - include_tasks: tasks/control-plane-components.yml
 
 
-- hosts: master2
-  become: true
-  gather_facts: false
-  tasks:
-    - name: Copy and execute master script 
-      script: /tmp/master.sh
-      tags:
-        - masters_join
-
-- hosts: workers
-  become: true
-  gather_facts: false
-  tasks:
-    - name: Copy and execute worker script 
-      script: /tmp/worker.sh
-      tags:
-        - worker_join
-
-
-- hosts: localhost
-  gather_facts: false
-  tasks:
-    - name: Clean Ansible local scripts
-      file:
-        path: "{{ item }}"
-        state: absent
-      with_items:
-        - /tmp/master.sh
-        - /tmp/worker.sh
-      tags:
-        - local_clean
-
-
-- hosts: master1
-  become: true
-  gather_facts: false
-  tasks:
-    - name: Install istio
-      command: "{{ item }}"
-      with_items:
-        - wget -O istio_install.sh https://git.io/getLatestIstio
-        - bash ./istio_install.sh ; false
-        - find . -name 'istioctl' -exec cp "{}" /usr/bin  \;
-        - istioctl install --skip-confirmation
-        #- kubectl label namespace default istio-injection=enabled
-        - bash -c "rm -rf istio*"
-      tags:
-        - istio
+# - hosts: master1
+#   become: true
+#   gather_facts: false
+#   tasks:
+#     - name: Install istio
+#       command: "{{ item }}"
+#       with_items:
+#         - wget -O istio_install.sh https://git.io/getLatestIstio
+#         - bash ./istio_install.sh ; false
+#         - find . -name 'istioctl' -exec cp "{}" /usr/bin  \;
+#         - istioctl install --skip-confirmation
+#         #- kubectl label namespace default istio-injection=enabled
+#         - bash -c "rm -rf istio*"
+#       tags:
+#         - istio
     
 
 
 ####### CLEAN UP ########
 - hosts: k8s
   become: true
+  serial: 1
 
   tasks:
     - name: "clean cache"

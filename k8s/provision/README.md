@@ -24,7 +24,7 @@ export GOOGLE_APPLICATION_CREDENTIALS=</path/to/key.json>
 ```
 
 
-
+# TODO PROTECT PASSWORD IN TF
 ### Terraform apply for DEV and PROD
 
 ```bash 
@@ -48,20 +48,17 @@ export ANSIBLE_CONFIG=ansible-files/ansible.cfg
 
 **Running...**
 ```bash
-# cd to the root folder of the project after applying Terraform
-cd ../../..
-# TODO: Fix line 3 in `k8s/provision/shared/ansible/tasks/control-plane-setup.yml`
-# Fixing manually on deployments
-#ansible-playbook -i ansible-files/prod-inventory.yml  k8s/provision/shared/ansible/k8s-cluster.yml
-ansible-playbook -i ansible-files/dev-inventory.yml  k8s/provision/shared/ansible/k8s-cluster.yml
+
+ansible-playbook -i ansible-files/dev-inventory.yml  k8s/provision/shared/ansible/k8s-cluster.yml --extra-vars "vars_file=dev_vars.yml"
+
 
 ```
 
 ## Get the kubectl config file
 
 ```bash
-echo $(ssh kube@master1.dev.psilva.org 'sudo cat /root/.kube/config | base64') | base64 -d > $HOME/.kube/config-dev
-echo $(ssh kube@master1.psilva.org 'sudo cat /root/.kube/config | base64') | base64 -d > $HOME/.kube/config-prod
+ssh kube@master1.dev.psilva.org 'sudo cat /root/.kube/config' > $HOME/.kube/config-dev
+ssh kube@master1.psilva.org     'sudo cat /root/.kube/config' > $HOME/.kube/config-prod
 
 # Add this to your equivalent of ~/.bashrc or ~/.zshrc
 echo 'export KUBECONFIG=$HOME/.kube/config-dev:$HOME/.kube/config-prod' >> ~/.zshrc

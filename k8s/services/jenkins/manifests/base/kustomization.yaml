@@ -1,5 +1,8 @@
 resources:
+  - rbac.yaml
+  - pv.yaml
+  - pvc.yaml
   - deployment.yaml
   - loadBalancer.yaml
-  - pvc.yaml
-  - rbac.yaml
+  
+  

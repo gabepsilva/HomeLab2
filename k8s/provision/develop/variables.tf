@@ -15,18 +15,10 @@ variable "containers" {
     }
     ,
     {
-      name      = "dnode1"
-      fqdn      = "dnode1.psilva.org" 
-      ip        = "192.168.51.221"
-      cpu       = 2
-      mem       = "3GB"
-    }
-    ,
-    {
       name      = "dnode2"
       fqdn      = "dnode2.psilva.org" 
       ip        = "192.168.51.222"
-      cpu       = 2
+      cpu       = 4
       mem       = "4GB"
     }
 ]

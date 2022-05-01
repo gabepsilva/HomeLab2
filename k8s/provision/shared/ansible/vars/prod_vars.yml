@@ -1,0 +1,2 @@
+control_plane_endpoint: loadbalancer1.psilva.org
+metal_lb_range: 192.168.49.100-192.168.49.254
