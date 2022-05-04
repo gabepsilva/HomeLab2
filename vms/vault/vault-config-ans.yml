@@ -1,0 +1,62 @@
+
+######## INSTALL BASE ########
+
+- hosts: vault
+  become: true
+  gather_facts: true
+  tags:
+    - base
+
+  roles:
+    - base
+
+
+  tasks:
+
+    - name: Set nfs mount
+      lineinfile:
+        path: /etc/fstab
+        line: bob.psilva.org:/mnt/user/vault/develop  /opt/vault   nfs auto,nofail,noatime,nolock,intr,tcp,actimeo=1800 0 0
+        insertbefore: EOF
+
+    - name: Create a directory if it does not exist
+      ansible.builtin.file:
+        path: /opt/vault
+        state: directory
+        mode: '0700'
+
+    - name: Create a directory if it does not exist
+      ansible.builtin.file:
+        path: /etc/fstab
+        state: file
+        mode: '0400'
+
+    - name: "mount NFS"
+      command: '{{ item }}'
+      loop:
+        - mount -a
+
+    - name: Add Vault GPG apt Key
+      apt_key:
+        url: https://apt.releases.hashicorp.com/gpg
+        state: present
+
+    - name: Add Vault Repository
+      apt_repository:
+        repo: deb https://apt.releases.hashicorp.com jammy main
+        state: present
+
+    - name: Update apt cache
+      package: state=latest update_cache=true
+
+    - name: Install Packages
+      package:
+        name: '{{ item }}'
+        state: latest
+      loop: ['vault']
+      
+    - name: "clean cache"
+      command: '{{ item }}' 
+      loop:
+        - apt clean
+      when: ansible_distribution in ['Debian', 'Ubuntu']

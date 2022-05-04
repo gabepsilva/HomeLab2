@@ -30,3 +30,11 @@ all:
                   dns: node2.dev.psilva.org
       vars:
         ansible_ssh_user: kube
+
+    vault:
+      hosts:
+
+        vault1:
+            ansible_host: vault.dev.psilva.org
+      vars:
+        ansible_ssh_user: vault

@@ -21,12 +21,12 @@ provider "lxd" {
     }
 }
 
-resource "lxd_container" "k8s_vms" {
+resource "lxd_container" "vms" {
 
     count = length(var.containers) 
 
     name              = var.containers[count.index].name
-    image             = "images:ubuntu/focal/cloud"
+    image             = "images:ubuntu/jammy/cloud"
     ephemeral         = "false"
     type              = "virtual-machine"
     wait_for_network  = true
@@ -63,12 +63,12 @@ resource "lxd_container" "k8s_vms" {
     manage_etc_hosts: true
     package_upgrade: true
     users:
-      - name: kube
-        home: /home/kube
+      - name: ${var.containers[count.index].username}
+        home: /home/${var.containers[count.index].username}
         shell: /bin/bash
         sudo: 'ALL=(ALL) NOPASSWD: ALL'
         lock_passwd: false
-        passwd: $6$3cVhKfRtYHqirpmP$BlV8kQQmtrwq7BGshX81kADXBeaR1i3ANXijh0/YSc9EQk0z6JK9NnJEtWeC0K8W/YQpk57OSrTKIe87o0nYs1
+        passwd: ${var.containers[count.index].userpass}
         ssh-authorized-keys:
           - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICST/387GTgu9qAPn92kzTsEyaXu6fdPryg4z+1azovj gabriel@marim
     ssh_pwauth: true

@@ -1,5 +1,5 @@
- variable lxc_password {
-    type = string
+variable lxc_password {
+  type = string
 }
 
 variable "containers" {
