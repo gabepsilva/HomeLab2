@@ -26,7 +26,7 @@ podTemplate(
                 withCredentials([usernamePassword(credentialsId: 'pi-piter', passwordVariable: 'PITER_PASS', usernameVariable: 'PITER_USER')]) {
                 def remote = [:]
                  
-                remote.name = 'piter.psilva.org'
+                remote.name = 'piter'
                 remote.host = 'piter.psilva.org'
                 remote.user = PITER_USER
                 remote.password = PITER_PASS
@@ -34,13 +34,15 @@ podTemplate(
                 remote.fileTransfer = 'scp'
     
                 sh 'touch ./AdGuardHome.yaml'
-                sshGet remote: remote, from: '/home/pi/adguardhome/conf/AdGuardHome.yaml', into: './AdGuardHome.yaml', override: true
+                //sshGet remote: remote, from: '/home/pi/adguardhome/conf/AdGuardHome.yaml', into: './AdGuardHome.yaml', override: true
        
             }
   
         }
         stage('Parse DNS records') {
-
+            
+            sh 'ls -lhrt'
+            sh 'ls -lhrt dns'
             def list = readFile("${workspace}/dns/internal.txt").readLines()
             list.eachWithIndex { item, index ->
                 line = item.trim().split(' ').join(' ')
