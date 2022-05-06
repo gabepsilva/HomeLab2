@@ -41,9 +41,9 @@ podTemplate(
         }
         stage('Parse DNS records') {
 
-            def list = readFile("${workspace}/AdGuardHome.yaml").readLines()
+            def list = readFile("${workspace}/dns/internal.txt").readLines()
             list.eachWithIndex { item, index ->
-                line = ' '.join(item.split(' '))
+                line = item.trim().split(' ').join(' ')
                 println(line + "@!")
                 //p1 = line.split(' ')[0]
                 //p2 = line.split(' ')[1]
