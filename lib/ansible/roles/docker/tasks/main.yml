@@ -6,19 +6,19 @@
     state: latest
   loop: ['ca-certificates', 'curl', 'lsb-release', 'gnupg2']
 
-- name: Add Docker GPG apt Key
-  apt_key:
-    url: https://download.docker.com/linux/ubuntu/gpg
-    state: present
+# - name: Add Docker GPG apt Key
+#   apt_key:
+#     url: https://download.docker.com/linux/ubuntu/gpg
+#     state: present
 
-- name: Fetch lsb_release -cs
-  shell: lsb_release -cs
-  register: lsb_rel
+# - name: Fetch lsb_release -cs
+#   shell: lsb_release -cs
+#   register: lsb_rel
 
-- name: Add Docker Repository
-  apt_repository:
-    repo: deb https://download.docker.com/linux/ubuntu xenial stable
-    state: present
+# - name: Add Docker Repository
+#   apt_repository:
+#     repo: deb https://download.docker.com/linux/ubuntu jammy stable
+#     state: present
 
 - name: Install Docker
   apt:
@@ -26,41 +26,46 @@
     state: latest
     name: '{{ item }}'
   loop:
-    - docker-ce
-    - docker-ce-cli
+  # THE COMMUNITY PACKAGE CAN REQUIRE EXTRA STEPS ON UBUNTU
+  # USING UBUNTU PACKAGE PROVIDED BY UBUNTU (DOCKER.IO) MAY BE OLDER BUT IT IS STABLE
+  # UBUNTUS PACKAGE MAKES ALL THIS COMMENTED CODE UNNECESSARY
+    #- docker-ce 
+    #- docker-ce-cli
+    #- containerd.io
+    - docker.io 
 
-- name: Create required directories
-  file:
-    path: '{{ item }}'
-    state: directory
-  loop:
-    - /etc/systemd/system/docker.service.d
-    - /etc/docker
+# - name: Create required directories
+#   file:
+#     path: '{{ item }}'
+#     state: directory
+#   loop:
+#     - /etc/systemd/system/docker.service.d
+#     - /etc/docker
 
-- name: creates /etc/docker/daemon.json
-  ansible.builtin.file:
-    path: /etc/docker/daemon.json
-    state: touch
+# - name: creates /etc/docker/daemon.json
+#   ansible.builtin.file:
+#     path: /etc/docker/daemon.json
+#     state: touch
 
-- name: Create daemon json config file
-  ansible.builtin.lineinfile:
-    path: /etc/docker/daemon.json
-    line: |
-      {
-        "exec-opts": ["native.cgroupdriver=systemd"],
-        "log-driver": "json-file",
-        "log-opts": {
-          "max-size": "100m"
-        },
-        "storage-driver": "overlay2"
-      }
+# - name: Create daemon json config file
+#   ansible.builtin.lineinfile:
+#     path: /etc/docker/daemon.json
+#     line: |
+#       {
+#         "exec-opts": ["native.cgroupdriver=systemd"],
+#         "log-driver": "json-file",
+#         "log-opts": {
+#           "max-size": "100m"
+#         },
+#         "storage-driver": "overlay2"
+#       }
 
-- name: Restart Docker
-  service: name=docker state=restarted
+# - name: Restart Docker
+#   service: name=docker state=restarted
 
 - name: Clean apt cache
   command:
-    cmd: apt-get clean
+    cmd: apt clean
 
 - name: Ensure group 'docker'
   ansible.builtin.group:

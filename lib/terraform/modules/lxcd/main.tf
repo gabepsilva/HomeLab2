@@ -21,16 +21,28 @@ provider "lxd" {
     }
 }
 
+
 resource "lxd_container" "vms" {
 
-    count = length(var.containers) 
+  count = length(var.containers) 
 
-    name              = var.containers[count.index].name
-    image             = "images:ubuntu/jammy/cloud"
-    ephemeral         = "false"
-    type              = "virtual-machine"
-    wait_for_network  = true
-    profiles          = ["default"]
+  name              = var.containers[count.index].name
+  image             = "images:ubuntu/focal/cloud"
+  ephemeral         = "false"
+  type              = "virtual-machine"
+  wait_for_network  = true
+  profiles          = ["default"]
+
+
+  device {
+    name = "root"
+    type = "disk"
+    properties = {
+      path = "/"
+      pool = "default"
+      size = var.containers[count.index].disk
+    }
+  } 
 
         config = {
         "limits.cpu": var.containers[count.index].cpu

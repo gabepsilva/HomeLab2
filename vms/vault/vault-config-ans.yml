@@ -12,16 +12,17 @@
 
 
   tasks:
+    - include_vars: "{{vars_file}}"
 
     - name: Set nfs mount
       lineinfile:
         path: /etc/fstab
-        line: bob.psilva.org:/mnt/user/vault/develop  /opt/vault   nfs auto,nofail,noatime,nolock,intr,tcp,actimeo=1800 0 0
+        line: "{{nfs_mount_path}}  /opt/vault/data   nfs auto,nofail,noatime,nolock,intr,tcp,actimeo=1800 0 0"
         insertbefore: EOF
 
     - name: Create a directory if it does not exist
       ansible.builtin.file:
-        path: /opt/vault
+        path: /opt/vault/data
         state: directory
         mode: '0700'
 
@@ -29,7 +30,7 @@
       ansible.builtin.file:
         path: /etc/fstab
         state: file
-        mode: '0400'
+        mode: '0600'
 
     - name: "mount NFS"
       command: '{{ item }}'
@@ -54,7 +55,30 @@
         name: '{{ item }}'
         state: latest
       loop: ['vault']
-      
+
+    - name: copy vault.hcl to remote
+      ansible.builtin.copy:
+        src: files/vault.hcl
+        dest: /etc/vault.d/vault.hcl
+        owner: vault
+        group: vault
+        mode: '0600'
+
+
+    - name: create service
+      ansible.builtin.copy:
+        src: files/vault.service
+        dest: /etc/systemd/system/vault.service
+        owner: vault
+        group: vault
+        mode: '0600'
+
+    - name: Enable and start service vault
+      ansible.builtin.service:
+        name: vault
+        enabled: yes
+        state: started
+
     - name: "clean cache"
       command: '{{ item }}' 
       loop:

@@ -7,27 +7,14 @@ variable "containers" {
   type = list(map(string))
   default = [
     {
-      name      = "pmaster1"
-      fqdn      = "pmaster1.psilva.org" 
-      ip        = "192.168.49.211"
+      name      = "pvault1"
+      fqdn      = "vault.psilva.org" 
+      ip        = "192.168.49.198"
       cpu       = 2
-      mem       = "3GB"
+      mem       = "1GB"
+
+      username  = "vault"
+      userpass  = "$y$j9T$tLmh7sHw/TxSQMYJ/tipx.$SBHx4b03mJKdr8KW8EwjaLPp1lSuS.PnfVU3.gnyrT5"
     }
-    ,
-    {
-      name      = "pnode1"
-      fqdn      = "pnode1.psilva.org" 
-      ip        = "192.168.49.221"
-      cpu       = 4
-      mem       = "4GB"
-    }
-    ,
-    {
-      name      = "pnode2"
-      fqdn      = "pnode2.psilva.org" 
-      ip        = "192.168.49.222"
-      cpu       = 8
-      mem       = "6GB"
-    }
-]
+  ]
 }

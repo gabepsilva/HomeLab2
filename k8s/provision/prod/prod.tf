@@ -6,7 +6,7 @@ terraform {
 }
 
 module "lxd_prod_provision" {
-    source = "../shared/terraform/modules/lxcd"
+    source = "../../../lib/terraform/modules/lxcd"
   
     lxc_password = var.lxc_password
     containers = var.containers

@@ -16,5 +16,5 @@ variable "containers" {
       username  = "vault"
       userpass  = "$y$j9T$tLmh7sHw/TxSQMYJ/tipx.$SBHx4b03mJKdr8KW8EwjaLPp1lSuS.PnfVU3.gnyrT5"
     }
-]
+  ]
 }

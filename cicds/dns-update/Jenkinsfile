@@ -1,0 +1,57 @@
+label='jk-worker-pod'
+podTemplate(
+    label: label,
+    containers: [
+        containerTemplate(
+            name: 'jnlp',
+            
+            image: 'ghcr.io/gasilva-clgx/jnlp-slave:latest',
+            runAsUser: 'root',
+            workingDir: '/home/jenkins',
+            resourceRequestCpu: '100m',
+            resourceLimitCpu: '2000m',
+            resourceRequestMemory: '1Gi',
+            resourceLimitMemory: '2Gi',
+        )
+    ],
+    volumes: [
+        //hostPathVolume(hostPath: '/usr/bin/docker', mountPath: '/usr/bin/docker'),
+        //hostPathVolume(hostPath: '/var/run/docker.sock', mountPath: '/var/run/docker.sock')
+    ]
+) {
+    node(label) {
+
+        stage('Fetch DNS Config file') {
+            
+                withCredentials([usernamePassword(credentialsId: 'pi-piter', passwordVariable: 'PITER_PASS', usernameVariable: 'PITER_USER')]) {
+                def remote = [:]
+                 
+                remote.name = 'piter.psilva.org'
+                remote.host = 'piter.psilva.org'
+                remote.user = PITER_USER
+                remote.password = PITER_PASS
+                remote.allowAnyHosts = true
+                remote.fileTransfer = 'scp'
+    
+                sh 'touch ./AdGuardHome.yaml'
+                sshGet remote: remote, from: '/home/pi/adguardhome/conf/AdGuardHome.yaml', into: './AdGuardHome.yaml', override: true
+       
+            }
+  
+        }
+        stage('Parse DNS records') {
+
+            def list = readFile("${workspace}/AdGuardHome.yaml").readLines()
+            list.eachWithIndex { item, index ->
+                line = ' '.join(item.split(' '))
+                println(line + "@!")
+                //p1 = line.split(' ')[0]
+                //p2 = line.split(' ')[1]
+                //rewrites.append({'answer': p1, 'domain': p2 })
+            }
+
+            
+        }
+        
+    }
+}

@@ -36,14 +36,25 @@ all:
         cloud:
           hosts:
 
+
+        vms:
+          children:
+
+            vault:
+              hosts:
+                pvault1:
+                  ansible_host: vault.psilva.org
+              vars:
+                ansible_ssh_user: "vault"
+
+
     k8s:
       children:
 
         loadbalancers:
           hosts:
             loadbalancer1:
-              ansible_host: 192.168.49.211
-              dns: master1.psilva.org
+              ansible_host: master1.psilva.org
 
         nodes:
           children:
@@ -51,16 +62,15 @@ all:
             masters:
               hosts:
                 master1:
-                  ansible_host: 192.168.49.211 
-                  dns: master1.psilva.org
+                  ansible_host: master1.psilva.org
 
             workers:
               hosts:
                 node1:
-                  ansible_host: 192.168.49.221
-                  dns: node1.psilva.org
+                  ansible_host: node1.psilva.org
                 node2:
-                  ansible_host: 192.168.49.222
-                  dns: node2.psilva.org     
+                  ansible_host: node2.psilva.org    
+                node3:
+                  ansible_host: node3.psilva.org 
       vars:
         ansible_ssh_user: kube

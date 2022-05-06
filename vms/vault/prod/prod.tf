@@ -1,12 +1,12 @@
 terraform { 
   backend "gcs" {
       bucket = "homelab2"
-      prefix  = "prod"
+      prefix  = "prod/vault"
   }
 }
 
 module "lxd_prod_provision" {
-    source = "../shared/terraform/modules/lxcd"
+    source = "../../../lib/terraform/modules/lxcd"
   
     lxc_password = var.lxc_password
     containers = var.containers

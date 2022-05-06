@@ -43,13 +43,17 @@ Good thing the Terraform scripts already copied my personal public key inside th
 
 **Preping...**
 ```bash
-export ANSIBLE_CONFIG=ansible-files/ansible.cfg
+export ANSIBLE_CONFIG=lib/ansible/ansible.cfg
 ```
 
 **Running...**
 ```bash
 
-ansible-playbook -i ansible-files/dev-inventory.yml  k8s/provision/shared/ansible/k8s-cluster.yml --extra-vars "vars_file=dev_vars.yml"
+#DEV
+ansible-playbook -i lib/ansible/prod-inventory.yml  k8s/provision/shared/ansible/k8s-cluster.yml --extra-vars "vars_file=dev_vars.yml"
+
+#PROD
+ansible-playbook -i lib/ansible/prod-inventory.yml  k8s/provision/shared/ansible/k8s-cluster.yml --extra-vars "vars_file=prod_vars.yml"
 
 
 ```
