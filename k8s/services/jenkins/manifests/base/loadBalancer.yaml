@@ -8,6 +8,9 @@ spec:
   selector:
     app: jenkins
   ports:
+    - name: httptls
+      port: 443
+      targetPort: 8443
     - name: http
       port: 80
       targetPort: 8080

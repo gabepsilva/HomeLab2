@@ -20,21 +20,32 @@ spec:
         fsGroup: 1000
       containers:
         - name: jenkins
-          image: jenkins/jenkins:lts-jdk11
-          imagePullPolicy: Always
+          image: jenkins/jenkins:lts
+          imagePullPolicy: IfNotPresent
           ports:
+            - containerPort: 8443
             - containerPort: 8080
             - containerPort: 50000
-          readinessProbe:
-            httpGet:
-              path: /login
-              port: 8080
-            initialDelaySeconds: 600
-            periodSeconds: 10
-            timeoutSeconds: 5
-            successThreshold: 2
-            failureThreshold: 10
+          env:
+            - name: JKS_PAS
+              valueFrom:
+                secretKeyRef:
+                  name: jenkins-jks
+                  key: passw
+            - name: JENKINS_OPTS
+              value: '--httpsPort=8443 --httpPort=-1 --httpsKeyStore=/var/lib/jenkins/keystore.jks --httpsKeyStorePassword=$(JKS_PAS)'  
+          #readinessProbe:
+          #  httpsGet:
+          #    path: /login
+          #    port: 8443
+          #  initialDelaySeconds: 5
+          #  periodSeconds: 2
+          #  timeoutSeconds: 5
+          #  successThreshold: 1
+          #  failureThreshold: 10
           volumeMounts:
+            - name: jenkins-jks-vol
+              mountPath: /var/lib/jenkins
             - name: nfs-pvc
               mountPath: /var/jenkins_home
           resources:
@@ -45,6 +56,12 @@ spec:
               cpu: 800m
               memory: 2Gi
       volumes:
+      - name: jenkins-jks-vol
+        secret:
+          secretName: jenkins-jks
+          items:
+          - key: keystore.jks
+            path: keystore.jks
       - name: nfs-pvc
         persistentVolumeClaim:
           claimName: pvc-nfs-jenkins
