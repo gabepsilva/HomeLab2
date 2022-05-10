@@ -6,7 +6,7 @@ export ANSIBLE_CONFIG=lib/ansible/ansible.cfg
 #DEV
 ansible-playbook -i lib/ansible/dev-inventory.yml  vms/vault/vault-config-ans.yml --extra-vars "vars_file=dev_vars.yml"
 #PROD
-ansible-playbook -i lib/ansible/dev-inventory.yml  vms/vault/vault-config-ans.yml --extra-vars "vars_file=prod_vars.yml"
+ansible-playbook -i lib/ansible/prod-inventory.yml  vms/vault/vault-config-ans.yml --extra-vars "vars_file=prod_vars.yml"
 ```
 
 
