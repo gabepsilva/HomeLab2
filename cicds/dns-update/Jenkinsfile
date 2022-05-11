@@ -5,8 +5,7 @@ podTemplate(
         containerTemplate(
             name: 'jnlp',
             
-            image: 'ghcr.io/gasilva-clgx/jnlp-slave:latest',
-            imagePullPolicy: "Always", //"IfNotPresent",
+            image: 'ghcr.io/gasilva-clgx/jnlp-slave:1.0.1',
             //runAsUser: 'root',
             workingDir: '/home/jenkins',
             resourceRequestCpu: '100m',
