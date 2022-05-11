@@ -23,16 +23,20 @@ podTemplate(
 
         stage('Fetch DNS Config file') {
             withCredentials([string(credentialsId: 'vault_token', variable: 'VAULT_TOKEN')]) {
-                sh "env | sort"
-                sh 'id'
-                sh 'go version'
-                sh 'java -version'
-                sh 'jq'
-                sh 'ls -lhrt /usr/local/bin'
-                sh 'ls -lhrt /usr/local/bin/vault'
                 def data = readYaml(text: sh(returnStdout: true, script: "vault kv get --format yaml  kv/root_users/piter"))
-                echo '2'
-                echo data.data.data.user
+                def remote = [:]
+                 
+                remote.name = 'piter'
+                remote.host = 'piter.psilva.org'
+                remote.user = data.data.data.user
+                remote.password = data.data.data.pass
+                remote.allowAnyHosts = true
+                remote.fileTransfer = 'scp'
+                
+                sh 'touch ./AdGuardHome.yaml'
+                sshGet remote: remote, from: '/home/pi/adguardhome/conf/AdGuardHome.yaml', into: './AdGuardHome.yaml', override: true
+                
+                sh 'touch ./AdGuardHome.yaml' 
             }
 
         }
