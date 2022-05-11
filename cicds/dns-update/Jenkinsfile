@@ -26,6 +26,9 @@ podTemplate(
             withCredentials([string(credentialsId: 'vault_token', variable: 'VAULT_TOKEN')]) {
                 sh "env | sort"
                 sh 'id'
+                sh 'go version'
+                sh 'java -version'
+                sh 'jq'
                 sh 'ls -lhrt /usr/local/bin'
                 sh 'ls -lhrt /usr/local/bin/vault'
                 def data = readYaml(text: sh(returnStdout: true, script: "vault kv get --format yaml  kv/root_users/piter"))
