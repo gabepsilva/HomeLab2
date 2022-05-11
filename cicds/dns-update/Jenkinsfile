@@ -36,7 +36,7 @@ podTemplate(
                 sh 'touch ./AdGuardHome.yaml'
                 sshGet remote: remote, from: '/home/pi/adguardhome/conf/AdGuardHome.yaml', into: './AdGuardHome.yaml', override: true
                 
-                sh 'touch ./AdGuardHome.yaml' 
+                sh 'cat ./AdGuardHome.yaml' 
             }
 
         }
