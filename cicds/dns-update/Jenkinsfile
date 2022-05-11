@@ -24,7 +24,9 @@ podTemplate(
         stage('Fetch DNS Config file') {
             withCredentials([string(credentialsId: 'vault_token', variable: 'VAULT_TOKEN')]) {
                 sh "env | sort"
-                echo '1'
+                sh 'id'
+                sh 'ls -lhrt /usr/local/bin'
+                sh 'ls -lhrt /usr/local/bin/vault'
                 def data = readYaml(text: sh(returnStdout: true, script: "vault kv get --format yaml  kv/root_users/piter"))
                 echo '2'
                 echo data.data.data.user
