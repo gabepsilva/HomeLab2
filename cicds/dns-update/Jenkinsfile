@@ -23,8 +23,9 @@ podTemplate(
     node(label) {
 
         stage('Fetch DNS Config file') {
-            sh "env | sort"
             echo 1
+            sh "env | sort"
+            echo 2
 
         }
         
