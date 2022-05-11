@@ -23,6 +23,17 @@ podTemplate(
 
         stage('Fetch DNS Config file') {
             
+             def data = readYaml text: sh(script: "vault kv get --format yaml  kv/root_users/piter")
+             echo data.data.data.user
+            
+            withCredentials([string(credentialsId: 'vault_token', variable: 'VAULT_TOKEN')]) {
+            
+             sh "env | sort"
+             kv get kv/root_users/piter   
+            }
+
+             
+            
                 withCredentials([usernamePassword(credentialsId: 'pi-piter', passwordVariable: 'PITER_PASS', usernameVariable: 'PITER_USER')]) {
                 def remote = [:]
                  
