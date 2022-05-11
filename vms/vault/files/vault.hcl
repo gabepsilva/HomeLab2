@@ -13,7 +13,7 @@ listener "tcp" {
     
 }
 storage "file" {
-    path  = "/opt/vault/data"
+    path  = "/opt/vault/data/mount"
 }
 
 api_addr                = "https://vault.psilva.org:8200"
