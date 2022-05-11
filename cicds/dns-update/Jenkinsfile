@@ -5,9 +5,8 @@ podTemplate(
         containerTemplate(
             name: 'jnlp',
             
-            //image: 'ghcr.io/gasilva-clgx/jnlp-slave:latest',
-            image: 'jenkins/jnlp-slave:4.9-1-alpine',
-            runAsUser: 'root',
+            image: 'ghcr.io/gasilva-clgx/jnlp-slave:latest',
+            //runAsUser: 'root',
             workingDir: '/home/jenkins',
             resourceRequestCpu: '100m',
             resourceLimitCpu: '2000m',
@@ -23,13 +22,13 @@ podTemplate(
     node(label) {
 
         stage('Fetch DNS Config file') {
-            echo '1'
-            sh "hostname"
-            echo '0'
-            sh 'pwd'
-            echo '2'
-            sh "printenv | sort"
-            echo '3'
+            withCredentials([string(credentialsId: 'vault_token', variable: 'VAULT_TOKEN')]) {
+                sh "env | sort"
+                echo '1'
+                def data = readYaml(text: sh(returnStdout: true, script: "vault kv get --format yaml  kv/root_users/piter"))
+                echo '2'
+                echo data.data.data.user
+            }
 
         }
         
