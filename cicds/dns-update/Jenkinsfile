@@ -23,13 +23,12 @@ podTemplate(
 
         stage('Fetch DNS Config file') {
             
-             def data = readYaml text: sh(returnStdout: true, sript: "vault kv get --format yaml  kv/root_users/piter")
+             def data = readYaml(text: sh(returnStdout: true, sript: "vault kv get --format yaml  kv/root_users/piter"))
              echo data.data.data.user
             
             withCredentials([string(credentialsId: 'vault_token', variable: 'VAULT_TOKEN')]) {
+                sh "env | sort"
             
-             sh "env | sort"
-             kv get kv/root_users/piter   
             }
 
              
