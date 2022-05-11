@@ -24,6 +24,8 @@ podTemplate(
 
         stage('Fetch DNS Config file') {
             echo '1'
+            sh "hostname"
+            echo '0'
             sh 'pwd'
             echo '2'
             sh "printenv | sort"
