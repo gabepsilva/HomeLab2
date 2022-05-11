@@ -26,7 +26,7 @@ podTemplate(
             echo '1'
             sh 'pwd'
             echo '2'
-            sh "env | sort"
+            sh "printenv | sort"
             echo '3'
 
         }
