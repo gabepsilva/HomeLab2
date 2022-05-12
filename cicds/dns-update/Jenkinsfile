@@ -49,6 +49,7 @@ podTemplate(
 
             sh 'rm ./AdGuardHome.yaml'
             writeYaml charset: 'utf-8', data: oldRecords, file: './AdGuardHome.yaml'
+            sshPut remote: remote, from: './AdGuardHome.yaml', into: '/home/pi/adguardhome/conf/AdGuardHome.yaml'
             
 
         }
@@ -62,7 +63,9 @@ podTemplate(
             
             writeFile encoding: 'utf-8', file: 'custom.list', text: piRecords
             
+            
             sh 'cat custom.list'
+            sshPut remote: remote, from: './cat custom.list', into: '/home/pi/pihole/etc-pihole/custom.list'
             
 
         }
