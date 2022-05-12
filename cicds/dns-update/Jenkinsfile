@@ -51,6 +51,7 @@ podTemplate(
 
             sh 'rm ./AdGuardHome.yaml'
             writeYaml charset: 'utf-8', data: oldRecords, file: './AdGuardHome.yaml'
+            sshCommand remote: remote, command: 'chown pi /home/pi/adguardhome/conf/AdGuardHome.yaml', sudo: true
             sshPut remote: remote, from: './AdGuardHome.yaml', into: '/home/pi/adguardhome/conf/AdGuardHome.yaml'
             sshCommand remote: remote, command: "docker restart adguardhome"
             
