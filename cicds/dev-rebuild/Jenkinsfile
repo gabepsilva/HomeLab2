@@ -29,10 +29,12 @@ podTemplate(
         }
         stage('Terraform rebuild'){
 
-            sh 'cd k8s/provision/develop'
-            sh 'terraform init'
-            sh 'terraform destroy --auto-approve'
-            sh 'terraform apply --auto-approve'
+            dir('k8s/provision/develop'){
+                sh 'terraform init'
+                sh 'terraform destroy --auto-approve'
+                sh 'terraform apply --auto-approve'
+            } 
+            
         }
 
         stage('Ansible configurations'){
