@@ -35,6 +35,8 @@ podTemplate(
                 remote.fileTransfer = 'scp'
                 remote.user = data.data.data.user
                 remote.password = data.data.data.pass
+                
+                newRecords = readYaml(file: "dns/internal.yaml")
             }
         }
         
@@ -45,8 +47,6 @@ podTemplate(
             sshGet remote: remote, from: '/home/pi/adguardhome/conf/AdGuardHome.yaml', into: './AdGuardHome.yaml', override: true     
             
             def oldRecords = readYaml(file: "./AdGuardHome.yaml")
-            newRecords = readYaml(file: "dns/internal.yaml")
-            
             oldRecords.dns.rewrites = newRecords.rewrites
 
             sh 'rm ./AdGuardHome.yaml'
