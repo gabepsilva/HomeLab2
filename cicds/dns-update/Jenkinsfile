@@ -63,7 +63,6 @@ podTemplate(
             
             def piRecords = ""
             for(def rec : newRecords.rewrites){
-                print rec
                 piRecords += "${rec['answer']} ${rec['domain']}\n"
             }
                 
