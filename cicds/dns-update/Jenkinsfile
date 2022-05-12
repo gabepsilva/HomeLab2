@@ -37,8 +37,10 @@ podTemplate(
                 remote.password = data.data.data.pass
             }
         }
-
-        stage('Update Adguard') {
+        
+        parallel Adguard: {
+            
+            stage('Update Adguard') {
             
             sshGet remote: remote, from: '/home/pi/adguardhome/conf/AdGuardHome.yaml', into: './AdGuardHome.yaml', override: true     
             
@@ -49,26 +51,33 @@ podTemplate(
 
             sh 'rm ./AdGuardHome.yaml'
             writeYaml charset: 'utf-8', data: oldRecords, file: './AdGuardHome.yaml'
-            sshPut remote: remote, from: './AdGuardHome.yaml', into: '/home/pi/adguardhome/conf/AdGuardHome.yaml'
+            //sshPut remote: remote, from: './AdGuardHome.yaml', into: '/home/pi/adguardhome/conf/AdGuardHome.yaml'
             
 
         }
-        stage('Update Pihole') {
             
-            //sshGet remote: remote, from: '/home/pi/pihole/etc-pihole/custom.list', into: 'custom.list', override: true
+    }, Pihole: {
+            
+            stage('Update Pihole') {
+            
             def piRecords = ""
             for(def rec : newRecords.rewrites){
+                print rec
                 piRecords += "${rec[answer]} ${rec[domain]}\n"
             }
             
             writeFile encoding: 'utf-8', file: 'custom.list', text: piRecords
-            
-            
+
             sh 'cat custom.list'
             sshPut remote: remote, from: './cat custom.list', into: '/home/pi/pihole/etc-pihole/custom.list'
             
 
         }
+    },
+    failFast: false
+
+
+
         
     }
 }
