@@ -20,27 +20,34 @@ podTemplate(
     ]
 ) {
     node(label) {
-
-        stage('Fetch DNS Config file') {
-            
+        
+        stage('Initialize values'){
             checkout scm
+            
             withCredentials([string(credentialsId: 'vault_token', variable: 'VAULT_TOKEN')]) {
-                data = readYaml(text: sh(returnStdout: true, script: "vault kv get --format yaml  kv/root_users/piter"))
-                def remote = [:]
-                 
+                
+                def data = readYaml(text: sh(returnStdout: true, script: "vault kv get --format yaml  kv/root_users/piter"))
+                
+                remote = [:]     
                 remote.name = 'piter'
                 remote.host = 'piter.psilva.org'
-                remote.user = data.data.data.user
-                remote.password = data.data.data.pass
                 remote.allowAnyHosts = true
                 remote.fileTransfer = 'scp'
-                
-                //sshGet remote: remote, from: '/home/pi/adguardhome/conf/AdGuardHome.yaml', into: './AdGuardHome.yaml', override: true
+                remote.user = data.data.data.user
+                remote.password = data.data.data.pass
             }
+        }
+
+        stage('Update Adguard') {
             
-            newRecords = readYaml(file: "dns/internal.txt")
-            print newRecords
-            print(data) 
+            sshGet remote: remote, from: '/home/pi/adguardhome/conf/AdGuardHome.yaml', into: './AdGuardHome.yaml', override: true
+            
+            def oldRecords = readYaml(file: "./AdGuardHome.yaml")
+            def newRecords = readYaml(file: "dns/internal.yaml")
+            
+            print oldRecords
+            oldRecords.rewrites = newRecords
+            print oldRecords
 
         }
         
