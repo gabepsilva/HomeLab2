@@ -33,8 +33,8 @@ podTemplate(
                 remote.allowAnyHosts = true
                 remote.fileTransfer = 'scp'
                 
-                echo var.WORKSPACE
-                sh "find ${var.WORKSPACE} -name internal.txt"
+                echo env.WORKSPACE
+                sh "find ${env.WORKSPACE} -name internal.txt"
                 
                 sh 'touch ./AdGuardHome.yaml'
                 sh 'cat ./AdGuardHome.yaml' 
