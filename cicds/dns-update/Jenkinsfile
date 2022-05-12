@@ -56,12 +56,12 @@ podTemplate(
         stage('Update Pihole') {
             
             //sshGet remote: remote, from: '/home/pi/pihole/etc-pihole/custom.list', into: 'custom.list', override: true
-            def newRec = ""
+            def newRecords = ""
             for(def rec : newRecords.rewrites){
                 newRec += "${rec[answer]} ${rec[domain]}\n"
             }
             
-            writeFile encoding: 'utf-8', file: 'custom.list', text: newRec
+            writeFile encoding: 'utf-8', file: 'custom.list', text: newRecords
             
             sh 'cat custom.list'
             
