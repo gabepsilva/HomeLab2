@@ -63,7 +63,7 @@ podTemplate(
             def piRecords = ""
             for(def rec : newRecords.rewrites){
                 print rec
-                piRecords += "${rec[answer]} ${rec[domain]}\n"
+                piRecords += "${rec['answer']} ${rec['domain']}\n"
             }
             
             writeFile encoding: 'utf-8', file: 'custom.list', text: piRecords
