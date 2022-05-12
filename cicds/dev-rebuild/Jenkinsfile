@@ -29,6 +29,7 @@ podTemplate(
         }
         stage('Terraform rebuild'){
 
+            sh 'ls -lhtrR'
             dir('k8s/provision/develop'){
                 sh 'terraform init'
                 sh 'terraform destroy --auto-approve'
