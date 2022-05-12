@@ -40,7 +40,6 @@ podTemplate(
 
         stage('Update Adguard') {
             
-            if(false){
             sshGet remote: remote, from: '/home/pi/adguardhome/conf/AdGuardHome.yaml', into: './AdGuardHome.yaml', override: true     
             
             def oldRecords = readYaml(file: "./AdGuardHome.yaml")
@@ -50,7 +49,7 @@ podTemplate(
 
             sh 'rm ./AdGuardHome.yaml'
             writeYaml charset: 'utf-8', data: oldRecords, file: './AdGuardHome.yaml'
-            }
+            
 
         }
         stage('Update Pihole') {
@@ -65,10 +64,6 @@ podTemplate(
             
             sh 'cat custom.list'
             
-            
-            
-            
-          
 
         }
         
