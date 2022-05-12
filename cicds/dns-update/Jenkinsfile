@@ -35,8 +35,7 @@ podTemplate(
                 remote.fileTransfer = 'scp'
                 remote.user = data.data.data.user
                 remote.password = data.data.data.pass
-                sh 'touch ./AdGuardHome.yaml'
-                print remote
+                //sh 'touch ./AdGuardHome.yaml'
                 sshGet remote: remote, from: '/home/pi/adguardhome/conf/AdGuardHome.yaml', into: './AdGuardHome.yaml', override: true     
             
             }
@@ -53,9 +52,16 @@ podTemplate(
             oldRecords.rewrites = newRecords
             print oldRecords
             
+            sh 'rm ./AdGuardHome.yaml'
             writeYaml charset: 'utf-8', data: oldRecords, file: './AdGuardHome.yaml'
             
             sh 'cat ./AdGuardHome.yaml'
+
+        }
+        stage('Update Adguard') {
+            
+         
+            sh 'date'
 
         }
         
