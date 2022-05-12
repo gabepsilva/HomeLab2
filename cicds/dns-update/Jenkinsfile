@@ -25,7 +25,7 @@ podTemplate(
             
             checkout scm
             withCredentials([string(credentialsId: 'vault_token', variable: 'VAULT_TOKEN')]) {
-                def data = readYaml(text: sh(returnStdout: true, script: "vault kv get --format yaml  kv/root_users/piter"))
+                data = readYaml(text: sh(returnStdout: true, script: "vault kv get --format yaml  kv/root_users/piter"))
                 def remote = [:]
                  
                 remote.name = 'piter'
