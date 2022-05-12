@@ -49,8 +49,13 @@ podTemplate(
             def newRecords = readYaml(file: "dns/internal.yaml")
             
             print oldRecords
+            print newRecords
             oldRecords.rewrites = newRecords
             print oldRecords
+            
+            writeYaml charset: 'utf-8', data: oldRecords, file: './AdGuardHome.yaml'
+            
+            sh 'cat ./AdGuardHome.yaml'
 
         }
         
