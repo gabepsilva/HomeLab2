@@ -4,56 +4,69 @@ podTemplate(
     containers: [
         containerTemplate(
             name: 'jnlp',
-            
-            image: 'ghcr.io/gasilva-clgx/jnlp-slave:latest',
-            runAsUser: 'root',
+            image: 'ghcr.io/gasilva-clgx/jnlp-slave:1.0.1',
             workingDir: '/home/jenkins',
             resourceRequestCpu: '100m',
             resourceLimitCpu: '2000m',
             resourceRequestMemory: '1Gi',
             resourceLimitMemory: '2Gi',
         )
-    ],
-    volumes: [
-        //hostPathVolume(hostPath: '/usr/bin/docker', mountPath: '/usr/bin/docker'),
-        //hostPathVolume(hostPath: '/var/run/docker.sock', mountPath: '/var/run/docker.sock')
     ]
 ) {
     node(label) {
-
-        stage('Fetch DNS Config file') {
+        
+        stage('Initialize values'){
+            checkout scm
             
-                withCredentials([usernamePassword(credentialsId: 'pi-piter', passwordVariable: 'PITER_PASS', usernameVariable: 'PITER_USER')]) {
-                def remote = [:]
-                 
+            withCredentials([string(credentialsId: 'vault_token', variable: 'VAULT_TOKEN')]) {
+                
+                def data = readYaml(text: sh(returnStdout: true, script: "vault kv get --format yaml  kv/root_users/piter"))
+                
+                remote = [:]     
                 remote.name = 'piter'
                 remote.host = 'piter.psilva.org'
-                remote.user = PITER_USER
-                remote.password = PITER_PASS
                 remote.allowAnyHosts = true
                 remote.fileTransfer = 'scp'
-    
-                sh 'touch ./AdGuardHome.yaml'
-                //sshGet remote: remote, from: '/home/pi/adguardhome/conf/AdGuardHome.yaml', into: './AdGuardHome.yaml', override: true
-       
+                remote.user = data.data.data.user
+                remote.password = data.data.data.pass
+                
+                newRecords = readYaml(file: "dns/internal.yaml")
             }
-  
         }
-        stage('Parse DNS records') {
+        
+        parallel Adguard: {
             
-            sh 'ls -lhrt'
-            sh 'ls -lhrt dns'
-            def list = readFile("${workspace}/dns/internal.txt").readLines()
-            list.eachWithIndex { item, index ->
-                line = item.trim().split(' ').join(' ')
-                println(line + "@!")
-                //p1 = line.split(' ')[0]
-                //p2 = line.split(' ')[1]
-                //rewrites.append({'answer': p1, 'domain': p2 })
-            }
+            stage('Update Adguard') {
+            
+            sshGet remote: remote, from: '/home/pi/adguardhome/conf/AdGuardHome.yaml', into: './AdGuardHome.yaml', override: true     
+            
+            def oldRecords = readYaml(file: "./AdGuardHome.yaml")
+            oldRecords.dns.rewrites = newRecords.rewrites
 
-            
+            sh 'rm ./AdGuardHome.yaml'
+            writeYaml charset: 'utf-8', data: oldRecords, file: './AdGuardHome.yaml'
+            sshCommand remote: remote, command: 'chown pi /home/pi/adguardhome/conf/AdGuardHome.yaml', sudo: true
+            sshPut remote: remote, from: './AdGuardHome.yaml', into: '/home/pi/adguardhome/conf/AdGuardHome.yaml'
+            sshCommand remote: remote, command: "docker restart adguardhome"
         }
+            
+    }, Pihole: {
+            
+            stage('Update Pihole') {
+            
+            def piRecords = ""
+            for(def rec : newRecords.rewrites){
+                piRecords += "${rec['answer']} ${rec['domain']}\n"
+            }
+                
+            print piRecords
+            writeFile encoding: 'utf-8', file: 'custom.list', text: piRecords
+
+            sshPut remote: remote, from: './custom.list', into: '/home/pi/pihole/etc-pihole/custom.list'
+            sshCommand remote: remote, command: "docker restart pihole"
+        }
+    },
+    failFast: false
         
     }
 }
