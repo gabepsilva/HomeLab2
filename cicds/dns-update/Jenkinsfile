@@ -33,9 +33,11 @@ podTemplate(
                 remote.allowAnyHosts = true
                 remote.fileTransfer = 'scp'
                 
+                sh 'cat ../../dns/internal.txt'
+                
                 sh 'touch ./AdGuardHome.yaml'
                 sh 'cat ./AdGuardHome.yaml' 
-                sshGet remote: remote, from: '/home/pi/adguardhome/conf/AdGuardHome.yaml', into: './AdGuardHome.yaml', override: true
+                //sshGet remote: remote, from: '/home/pi/adguardhome/conf/AdGuardHome.yaml', into: './AdGuardHome.yaml', override: true
                 
                 sh 'cat ./AdGuardHome.yaml' 
             }
@@ -45,50 +47,3 @@ podTemplate(
     }
 }
 
-
-label='jk-worker-pod2'
-podTemplate(
-    label: label,
-    containers: [
-        containerTemplate(
-            name: 'jnlp',
-            
-            image: 'ghcr.io/gasilva-clgx/jnlp-slave:1.0.1',
-            //runAsUser: 'root',
-            workingDir: '/home/jenkins',
-            resourceRequestCpu: '100m',
-            resourceLimitCpu: '2000m',
-            resourceRequestMemory: '1Gi',
-            resourceLimitMemory: '2Gi',
-        )
-    ],
-    volumes: [
-        //hostPathVolume(hostPath: '/usr/bin/docker', mountPath: '/usr/bin/docker'),
-        //hostPathVolume(hostPath: '/var/run/docker.sock', mountPath: '/var/run/docker.sock')
-    ]
-) {
-    node(label) {
-
-        stage('Fetch DNS Config file') {
-            withCredentials([string(credentialsId: 'vault_token', variable: 'VAULT_TOKEN')]) {
-                def data = readYaml(text: sh(returnStdout: true, script: "vault kv get --format yaml  kv/root_users/piter"))
-                def remote = [:]
-                 
-                remote.name = 'piter'
-                remote.host = 'piter.psilva.org'
-                remote.user = data.data.data.user
-                remote.password = data.data.data.pass
-                remote.allowAnyHosts = true
-                remote.fileTransfer = 'scp'
-                
-                sh 'touch ./AdGuardHome.yaml'
-                sh 'cat ./AdGuardHome.yaml' 
-                sshGet remote: remote, from: '/home/pi/adguardhome/conf/AdGuardHome.yaml', into: './AdGuardHome.yaml', override: true
-                
-                sh 'cat ./AdGuardHome.yaml' 
-            }
-
-        }
-        
-    }
-}
