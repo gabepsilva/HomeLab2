@@ -22,6 +22,8 @@ podTemplate(
     node(label) {
 
         stage('Fetch DNS Config file') {
+            
+            checkout scm
             withCredentials([string(credentialsId: 'vault_token', variable: 'VAULT_TOKEN')]) {
                 def data = readYaml(text: sh(returnStdout: true, script: "vault kv get --format yaml  kv/root_users/piter"))
                 def remote = [:]
