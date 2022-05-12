@@ -26,7 +26,7 @@ podTemplate(
             
             withCredentials([string(credentialsId: 'vault_token', variable: 'VAULT_TOKEN')]) {
                 
-                data = readYaml(text: sh(returnStdout: true, script: "vault kv get --format yaml  kv/root_users/piter"))
+                def data = readYaml(text: sh(returnStdout: true, script: "vault kv get --format yaml  kv/root_users/piter"))
                 
                 remote = [:]     
                 remote.name = 'piter'
@@ -44,7 +44,7 @@ podTemplate(
             sshGet remote: remote, from: '/home/pi/adguardhome/conf/AdGuardHome.yaml', into: './AdGuardHome.yaml', override: true     
             
             def oldRecords = readYaml(file: "./AdGuardHome.yaml")
-            def newRecords = readYaml(file: "dns/internal.yaml")
+            newRecords = readYaml(file: "dns/internal.yaml")
             
             oldRecords.dns.rewrites = newRecords.rewrites
 
@@ -56,12 +56,12 @@ podTemplate(
         stage('Update Pihole') {
             
             //sshGet remote: remote, from: '/home/pi/pihole/etc-pihole/custom.list', into: 'custom.list', override: true
-            def newRecords = ""
+            def piRecords = ""
             for(def rec : newRecords.rewrites){
-                newRec += "${rec[answer]} ${rec[domain]}\n"
+                piRecords += "${rec[answer]} ${rec[domain]}\n"
             }
             
-            writeFile encoding: 'utf-8', file: 'custom.list', text: newRecords
+            writeFile encoding: 'utf-8', file: 'custom.list', text: piRecords
             
             sh 'cat custom.list'
             
