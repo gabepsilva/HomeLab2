@@ -4,7 +4,7 @@ podTemplate(
     containers: [
         containerTemplate(
             name: 'jnlp',
-            image: 'ghcr.io/gasilva-clgx/jnlp-slave:1.0.1',
+            image: 'ghcr.io/gasilva-clgx/jnlp-slave:1.0.2',
             workingDir: '/home/jenkins',
             resourceRequestCpu: '100m',
             resourceLimitCpu: '2000m',
@@ -50,23 +50,20 @@ podTemplate(
             sshCommand remote: remote, command: "docker restart adguardhome"
         }
             
-    }, Pihole: {
-            
+        }, Pihole: {
             stage('Update Pihole') {
-            
-            def piRecords = ""
-            for(def rec : newRecords.rewrites){
-                piRecords += "${rec['answer']} ${rec['domain']}\n"
-            }
                 
-            print piRecords
-            writeFile encoding: 'utf-8', file: 'custom.list', text: piRecords
+                def piRecords = ""
+                for(def rec : newRecords.rewrites){
+                    piRecords += "${rec['answer']} ${rec['domain']}\n"
+                }
+                    
+                writeFile encoding: 'utf-8', file: 'custom.list', text: piRecords
 
-            sshPut remote: remote, from: './custom.list', into: '/home/pi/pihole/etc-pihole/custom.list'
-            sshCommand remote: remote, command: "docker restart pihole"
-        }
-    },
-    failFast: false
-        
+                sshPut remote: remote, from: './custom.list', into: '/home/pi/pihole/etc-pihole/custom.list'
+                sshCommand remote: remote, command: "docker restart pihole"
+            }
+        },
+        failFast: false
     }
 }

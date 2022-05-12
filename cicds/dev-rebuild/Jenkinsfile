@@ -1,0 +1,45 @@
+label='jk-worker-pod'
+podTemplate(
+    label: label,
+    containers: [
+        containerTemplate(
+            name: 'jnlp',
+            image: 'ghcr.io/gasilva-clgx/jnlp-slave:1.0.3',
+            workingDir: '/home/jenkins',
+            resourceRequestCpu: '100m',
+            resourceLimitCpu: '2000m',
+            resourceRequestMemory: '1Gi',
+            resourceLimitMemory: '2Gi',
+        )
+    ]
+) {
+    node(label) {
+        
+        stage('Initialize values'){
+            checkout scm
+            
+            withCredentials([string(credentialsId: 'vault_token', variable: 'VAULT_TOKEN')]) {
+                
+                def gcpJsonKey = readYaml(text: sh(returnStdout: true, script: "vault kv get --format yaml  kv/sa/gcp/homelab2"))
+                def lxdPwd = readYaml(text: sh(returnStdout: true, script: "vault kv get --format yaml  kv/root_users/lxdApiServer"))
+
+                env.TF_VAR_lxc_password = lxdPwd.data.data.tf_sa_homelab2_jsonKey
+                env.GOOGLE_APPLICATION_CREDENTIALS = gcpJsonKey.data.data.tf_sa_homelab2_jsonKey
+            }
+        }
+        stage('Terraform rebuild'){
+
+            sh 'cd k8s/provision/develop'
+            sh 'terraform init'
+            sh 'terraform destroy --auto-approve'
+            sh 'terraform apply --auto-approve'
+        }
+
+        stage('Ansible configurations'){
+            env.ANSIBLE_CONFIG='lib/ansible/ansible.cfg'
+            sh 'ansible-playbook \
+                -i lib/ansible/prod-inventory.yml k8s/provision/shared/ansible/k8s-cluster.yml \
+                --extra-vars "vars_file=dev_vars.yml"'
+        }
+    }
+}
