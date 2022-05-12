@@ -39,7 +39,7 @@ podTemplate(
             }
             
             newRecords = readYaml(file: "dns/internal.txt")
-            echo newRecords
+            print newRecords
             print(data) 
 
         }
