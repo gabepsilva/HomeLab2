@@ -38,9 +38,9 @@ podTemplate(
                 //sshGet remote: remote, from: '/home/pi/adguardhome/conf/AdGuardHome.yaml', into: './AdGuardHome.yaml', override: true
             }
             
-            def newRecords = readYaml(file: "../../internal.txt")
-            
+            def newRecords = readYaml(file: "dns/internal.txt")
             echo newRecords
+            echo data
 
         }
         
