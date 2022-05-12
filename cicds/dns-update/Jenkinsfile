@@ -35,9 +35,6 @@ podTemplate(
                 remote.fileTransfer = 'scp'
                 remote.user = data.data.data.user
                 remote.password = data.data.data.pass
-                //sh 'touch ./AdGuardHome.yaml'
-                
-            
             }
         }
 
@@ -48,11 +45,8 @@ podTemplate(
             def oldRecords = readYaml(file: "./AdGuardHome.yaml")
             def newRecords = readYaml(file: "dns/internal.yaml")
             
-            print oldRecords
-            print newRecords
-            oldRecords.rewrites = newRecords
-            print oldRecords
-            
+            oldRecords.dns.rewrites = newRecords.rewrites
+
             sh 'rm ./AdGuardHome.yaml'
             writeYaml charset: 'utf-8', data: oldRecords, file: './AdGuardHome.yaml'
             
