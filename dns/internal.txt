@@ -1,30 +1,62 @@
-192.168.50.2    	    docs.psilva.org    
-192.168.50.5   	     plex.psilva.org   
-192.168.50.8            speedtest.psilva.org  
-192.168.51.211 loadbalancer1.dev.psilva.org  
-192.168.51.211 master1.dev.psilva.org
-192.168.51.221 node1.dev.psilva.org
-192.168.51.222 node2.dev.psilva.org
-192.168.48.4 bob.psilva.org
-192.168.48.3 captain.psilva.org
-192.168.49.2 pihole.psilva.org
-192.168.49.1 adguard.psilva.org
-192.168.51.211 a.psilva.local
-192.168.48.2 piter.psilva.org
-192.168.49.99 uptime-kuma.psilva.org
-192.168.49.100 iperf3.psilva.org
-192.168.49.255 prometheus.psilva.org
-192.168.49.255 grafana.psilva.org
-192.168.49.1 rest2.demo.psilva.org
-192.168.51.198 vault.dev.psilva.org
-192.168.49.142 jenkins.psilva.org
-192.168.49.149 speedtest-tracker.psilva.org
-192.168.49.149 uptime-kuma.psilva.org
-192.168.51.149 rest1.demo.dev.psilva.org
-192.168.51.149 rest2.demo.dev.psilva.org
-192.168.49.198 vault.psilva.org
-192.168.49.205 node3.psilva.org
-192.168.49.201 master1.psilva.org
-192.168.49.204 node2.psilva.org
-192.168.49.203 node1.psilva.org
-192.168.49.201 loadbalancer1.psilva.org
+---
+rewrites:
+  - domain: docs.psilva.org
+    answer: 192.168.50.2    	    
+  - domain: plex.psilva.org          
+    answer: 192.168.50.5   	
+  - domain: speedtest.psilva.org         
+    answer: 192.168.50.8    
+  - domain: loadbalancer1.dev.psilva.org         
+    answer: 192.168.51.211  
+  - domain: master1.dev.psilva.org       
+    answer: 192.168.51.211  
+  - domain: node1.dev.psilva.org       
+    answer: 192.168.51.221  
+  - domain: node2.dev.psilva.org       
+    answer: 192.168.51.222  
+  - domain: bob.psilva.org       
+    answer: 192.168.48.4    
+  - domain: captain.psilva.org       
+    answer: 192.168.48.3    
+  - domain: pihole.psilva.org       
+    answer: 192.168.49.2    
+  - domain: adguard.psilva.org       
+    answer: 192.168.49.1    
+  - domain: a.psilva.local       
+    answer: 192.168.51.211  
+  - domain: piter.psilva.org       
+    answer: 192.168.48.2    
+  - domain: uptime-kuma.psilva.org       
+    answer: 192.168.49.99   
+  - domain: iperf3.psilva.org       
+    answer: 192.168.49.100  
+  - domain: prometheus.psilva.org       
+    answer: 192.168.49.255  
+  - domain: grafana.psilva.org       
+    answer: 192.168.49.255  
+  - domain: rest2.demo.psilva.org       
+    answer: 192.168.49.1    
+  - domain: vault.dev.psilva.org       
+    answer: 192.168.51.198  
+  - domain: jenkins.psilva.org       
+    answer: 192.168.49.142  
+  - domain: speedtest-tracker.psilva.org       
+    answer: 192.168.49.149  
+  - domain: uptime-kuma.psilva.org       
+    answer: 192.168.49.149  
+  - domain: rest1.demo.dev.psilva.org       
+    answer: 192.168.51.149  
+  - domain: rest2.demo.dev.psilva.org       
+    answer: 192.168.51.149  
+  - domain: vault.psilva.org       
+    answer: 192.168.49.198  
+  - domain: node3.psilva.org       
+    answer: 192.168.49.205  
+  - domain: master1.psilva.org       
+    answer: 192.168.49.201  
+  - domain: node2.psilva.org       
+    answer: 192.168.49.204  
+  - domain: node1.psilva.org       
+    answer: 192.168.49.203  
+  - domain: loadbalancer1.psilva.org       
+    answer: 192.168.49.201  
