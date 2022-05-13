@@ -27,7 +27,7 @@ podTemplate(
                 writeFile(file: "${env.WORKSPACE}/gkey.json", text: gcpJsonKey.data.data.tf_sa_homelab2_jsonKey)
                 sh'mkdir ~/.ssh'
                 writeFile(file: "~/.ssh/id_ed25519", text: sshKey.data.data.private)
-                echo sshKey.data.data.private
+                sh "ls -laR ."
                 sh  "cat ~/.ssh/id_ed25519"
                 sh 'chmod 400 ~/.ssh/id_ed25519'
 
