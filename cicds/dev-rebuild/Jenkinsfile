@@ -25,14 +25,14 @@ podTemplate(
                 
                 writeFile(file: "${env.WORKSPACE}/gkey.json", text: gcpJsonKey.data.data.tf_sa_homelab2_jsonKey)
 
-                env.TF_VAR_lxc_password = lxdPwd.data.data.tf_sa_homelab2_jsonKey
+                env.TF_VAR_lxc_password = lxdPwd.data.data.lxdApiServerPwd
                 env.GOOGLE_APPLICATION_CREDENTIALS = "${env.WORKSPACE}/gkey.json"
             }
         }
         stage('Terraform rebuild'){
 
             dir('k8s/provision/develop'){
-                ansiColor('vga') {
+                ansiColor('xterm') {
                     sh 'terraform init'
                     sh 'terraform destroy --auto-approve'
                     sh 'terraform apply --auto-approve'
