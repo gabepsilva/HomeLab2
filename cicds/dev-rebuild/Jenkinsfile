@@ -31,11 +31,12 @@ podTemplate(
         }
         stage('Terraform rebuild'){
 
-            sh 'ls -lhtrR'
             dir('k8s/provision/develop'){
-                sh 'terraform init'
-                sh 'terraform destroy --auto-approve'
-                sh 'terraform apply --auto-approve'
+                ansiColor('vga') {
+                    sh 'terraform init'
+                    sh 'terraform destroy --auto-approve'
+                    sh 'terraform apply --auto-approve'
+                }
             } 
             
         }
