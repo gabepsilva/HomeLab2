@@ -46,8 +46,6 @@ podTemplate(
             } 
            */
             echo "aaa:"
-            sh "ping -c 5 '192.168.51.201'"
-            sh "ping -c 5 'dmaster1.dev.psilva.org'"
         }
 
         stage('Ansible configurations'){
