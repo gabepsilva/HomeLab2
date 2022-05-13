@@ -50,7 +50,7 @@ export ANSIBLE_CONFIG=lib/ansible/ansible.cfg
 ```bash
 
 #DEV
-ansible-playbook -i lib/ansible/prod-inventory.yml  k8s/provision/shared/ansible/k8s-cluster.yml --extra-vars "vars_file=dev_vars.yml"
+ansible-playbook -i lib/ansible/dev-inventory.yml  k8s/provision/shared/ansible/k8s-cluster.yml --extra-vars "vars_file=dev_vars.yml"
 
 #PROD
 ansible-playbook -i lib/ansible/prod-inventory.yml  k8s/provision/shared/ansible/k8s-cluster.yml --extra-vars "vars_file=prod_vars.yml"
