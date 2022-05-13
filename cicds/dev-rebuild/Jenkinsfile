@@ -24,14 +24,16 @@ podTemplate(
                 def lxdPwd = readYaml(text: sh(returnStdout: true, script: "vault kv get --format yaml  kv/root_users/lxdApiServer"))
                 def sshKey = readYaml(text: sh(returnStdout: true, script: "vault kv get --format yaml  kv/root_users/sshkey"))
                 
-                writeFile(file: "${env.WORKSPACE}/gkey.json", text: gcpJsonKey.data.data.tf_sa_homelab2_jsonKey)
-                
                 def fpath = "/home/jenkins/.ssh/id_ed25519"
-                sh "mkdir /home/jenkins/.ssh ; touch ${fpath}"
+                def fpathPub = "/home/jenkins/.ssh/id_ed25519.pub"
+                sh "mkdir /home/jenkins/.ssh ; touch ${fpath} ; touch ${fpathPub}"
                 writeFile(file: fpath, text: sshKey.data.data.private)
-                sh "chmod 400 ${fpath}"
+                writeFile(file: fpathPub, text: sshKey.data.data.public)
+                sh "chmod 400 ${fpath} ${fpathPub}"
 
                 env.TF_VAR_lxc_password = lxdPwd.data.data.lxdApiServerPwd
+                
+                writeFile(file: "${env.WORKSPACE}/gkey.json", text: gcpJsonKey.data.data.tf_sa_homelab2_jsonKey)
                 env.GOOGLE_APPLICATION_CREDENTIALS = "${env.WORKSPACE}/gkey.json"
             }
         }
