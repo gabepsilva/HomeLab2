@@ -36,18 +36,10 @@ podTemplate(
                 writeFile(file: "${env.WORKSPACE}/gkey.json", text: gcpJsonKey.data.data.tf_sa_homelab2_jsonKey)
                 env.GOOGLE_APPLICATION_CREDENTIALS = "${env.WORKSPACE}/gkey.json"
                 
-
-                sh'''
-                ls -lhrt /home/jenkins/.ssh
-                cat -A /home/jenkins/.ssh/id_ed25519
-                cat -A /home/jenkins/.ssh/id_ed25519.pub
-                
-                
-                '''
             }
         }
         stage('Terraform rebuild'){
-/*
+
             dir('k8s/provision/develop'){
                 ansiColor('xterm') {
                     sh 'terraform init'
@@ -55,8 +47,6 @@ podTemplate(
                     sh 'terraform apply --auto-approve'
                 }
             } 
-           */
-            echo "aaa:"
         }
 
         stage('Ansible configurations'){
