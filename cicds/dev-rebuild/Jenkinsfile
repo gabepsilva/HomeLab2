@@ -39,8 +39,8 @@ podTemplate(
 
                 sh'''
                 ls -lhrt /home/jenkins/.ssh
-                cksum /home/jenkins/.ssh/id_ed25519
-                cksum /home/jenkins/.ssh/id_ed25519.pub
+                cat -A /home/jenkins/.ssh/id_ed25519
+                cat -A /home/jenkins/.ssh/id_ed25519.pub
                 
                 
                 '''
