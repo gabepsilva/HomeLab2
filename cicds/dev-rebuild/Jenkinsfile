@@ -36,7 +36,14 @@ podTemplate(
                 writeFile(file: "${env.WORKSPACE}/gkey.json", text: gcpJsonKey.data.data.tf_sa_homelab2_jsonKey)
                 env.GOOGLE_APPLICATION_CREDENTIALS = "${env.WORKSPACE}/gkey.json"
                 
-                sh 'ls -lhrt /home/jenkins/.ssh'
+
+                sh'''
+                ls -lhrt /home/jenkins/.ss
+                cksum /home/jenkins/.ssh/id_ed25519
+                cksum /home/jenkins/.ssh/id_ed25519.pub
+                
+                
+                '''
             }
         }
         stage('Terraform rebuild'){
