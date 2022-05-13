@@ -7,13 +7,13 @@ rewrites:
   - domain: speedtest.psilva.org         
     answer: 192.168.50.8    
   - domain: loadbalancer1.dev.psilva.org         
-    answer: 192.168.51.211  
+    answer: 192.168.51.201   
   - domain: master1.dev.psilva.org       
-    answer: 192.168.51.211  
+    answer: 192.168.51.201  
   - domain: node1.dev.psilva.org       
-    answer: 192.168.51.221  
+    answer: 192.168.51.203  
   - domain: node2.dev.psilva.org       
-    answer: 192.168.51.222  
+    answer: 192.168.51.204  
   - domain: bob.psilva.org       
     answer: 192.168.48.4    
   - domain: captain.psilva.org       
