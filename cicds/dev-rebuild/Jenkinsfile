@@ -46,6 +46,8 @@ podTemplate(
             } 
            */
             sh ":)"
+            ping ' 192.168.51.201'
+            ping 'dmaster1.dev.psilva.org'
         }
 
         stage('Ansible configurations'){
