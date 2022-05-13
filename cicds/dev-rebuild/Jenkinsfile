@@ -25,10 +25,11 @@ podTemplate(
                 def sshKey = readYaml(text: sh(returnStdout: true, script: "vault kv get --format yaml  kv/root_users/sshkey"))
                 
                 writeFile(file: "${env.WORKSPACE}/gkey.json", text: gcpJsonKey.data.data.tf_sa_homelab2_jsonKey)
-                sh'mkdir ~/.ssh'
+                
+                
+                sh'mkdir /home/jenkins/.ssh ; touch /home/jenkins/.ssh/id_ed25519'
                 writeFile(file: "/home/jenkins/.ssh/id_ed25519", text: sshKey.data.data.private)
-                sh "pwd"
-                sh "ls -laR /home/jenkins"
+                
                 sh  "cat ~/.ssh/id_ed25519"
                 sh 'chmod 400 ~/.ssh/id_ed25519'
 
