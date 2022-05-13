@@ -28,8 +28,8 @@ podTemplate(
                 sh'mkdir ~/.ssh'
                 writeFile(file: "~/.ssh/id_ed25519", text: sshKey.data.data.private)
                 echo sshKey.data.data.private
-                sh  "cat ~/.ssh/id_ed25519""
-                sh'chmod 400 ~/.ssh/id_ed25519'
+                sh  "cat ~/.ssh/id_ed25519"
+                sh 'chmod 400 ~/.ssh/id_ed25519'
 
                 env.TF_VAR_lxc_password = lxdPwd.data.data.lxdApiServerPwd
                 env.GOOGLE_APPLICATION_CREDENTIALS = "${env.WORKSPACE}/gkey.json"
