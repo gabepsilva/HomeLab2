@@ -27,7 +27,7 @@ resource "lxd_container" "vms" {
   count = length(var.containers) 
 
   name              = var.containers[count.index].name
-  image             = "images:ubuntu/focal/cloud"
+  image             = "images:ubuntu/jammy/cloud"
   ephemeral         = "false"
   type              = "virtual-machine"
   wait_for_network  = true
