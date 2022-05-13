@@ -26,12 +26,10 @@ podTemplate(
                 
                 writeFile(file: "${env.WORKSPACE}/gkey.json", text: gcpJsonKey.data.data.tf_sa_homelab2_jsonKey)
                 
-                
-                sh'mkdir /home/jenkins/.ssh ; touch /home/jenkins/.ssh/id_ed25519'
-                writeFile(file: "/home/jenkins/.ssh/id_ed25519", text: sshKey.data.data.private)
-                
-                sh  "cat ~/.ssh/id_ed25519"
-                sh 'chmod 400 ~/.ssh/id_ed25519'
+                def fpath = "/home/jenkins/.ssh/id_ed25519"
+                sh "mkdir /home/jenkins/.ssh ; touch ${fpath}"
+                writeFile(file: fpath, text: sshKey.data.data.private)
+                sh "chmod 400 ${fpath}"
 
                 env.TF_VAR_lxc_password = lxdPwd.data.data.lxdApiServerPwd
                 env.GOOGLE_APPLICATION_CREDENTIALS = "${env.WORKSPACE}/gkey.json"
