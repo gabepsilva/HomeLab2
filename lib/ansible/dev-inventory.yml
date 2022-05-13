@@ -22,7 +22,6 @@ all:
               hosts:
                 node1:
                   ansible_host: 192.168.51.203
-                  dns: node1.dev.psilva.org
                 node2:
                   ansible_host: 192.168.51.204 
       vars:
