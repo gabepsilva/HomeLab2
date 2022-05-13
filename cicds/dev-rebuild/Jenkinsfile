@@ -23,7 +23,7 @@ podTemplate(
                 def gcpJsonKey = readYaml(text: sh(returnStdout: true, script: "vault kv get --format yaml  kv/sa/gcp/homelab2"))
                 def lxdPwd = readYaml(text: sh(returnStdout: true, script: "vault kv get --format yaml  kv/root_users/lxdApiServer"))
                 
-                writeFile(file: "${env.WORKSPACE}/gkey.json", text: gcpJsonKey)
+                writeFile(file: "${env.WORKSPACE}/gkey.json", text: gcpJsonKey.data.data.tf_sa_homelab2_jsonKey)
 
                 env.TF_VAR_lxc_password = lxdPwd.data.data.tf_sa_homelab2_jsonKey
                 env.GOOGLE_APPLICATION_CREDENTIALS = "${env.WORKSPACE}/gkey.json"
