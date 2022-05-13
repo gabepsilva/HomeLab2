@@ -22,8 +22,12 @@ podTemplate(
                 
                 def gcpJsonKey = readYaml(text: sh(returnStdout: true, script: "vault kv get --format yaml  kv/sa/gcp/homelab2"))
                 def lxdPwd = readYaml(text: sh(returnStdout: true, script: "vault kv get --format yaml  kv/root_users/lxdApiServer"))
+                def sshKey = readYaml(text: sh(returnStdout: true, script: "vault kv get --format yaml  kv/root_users/sshkey"))
                 
                 writeFile(file: "${env.WORKSPACE}/gkey.json", text: gcpJsonKey.data.data.tf_sa_homelab2_jsonKey)
+                sh'mkdir ~/.ssh'
+                writeFile(file: "~/.ssh/id_ed25519", text: sshKey.data.data.private)
+                sh'chmod 400 ~/.ssh/id_ed25519'
 
                 env.TF_VAR_lxc_password = lxdPwd.data.data.lxdApiServerPwd
                 env.GOOGLE_APPLICATION_CREDENTIALS = "${env.WORKSPACE}/gkey.json"
@@ -43,13 +47,11 @@ podTemplate(
 
         stage('Ansible configurations'){
             sh 'chmod 400 ansible.cfg'            
-            sh 'ansible-playbook \
-                -i lib/ansible/prod-inventory.yml k8s/provision/shared/ansible/k8s-cluster.yml \
-                --extra-vars "vars_file=dev_vars.yml"'
+            sh '''ansible-playbook \
+                -i lib/ansible/dev-inventory.yml k8s/provision/shared/ansible/k8s-cluster.yml \
+                --extra-vars "vars_file=dev_vars.yml"'''
             
-            sh "ls -lhrt"
-            deleteDir()
-            sh "ls -lhrt"
+
         }
     }
 }
