@@ -46,7 +46,8 @@ podTemplate(
                     sh 'terraform destroy --auto-approve'
                     sh 'terraform apply --auto-approve'
                 }
-            } 
+            }
+            sleep 45
         }
 
         stage('Ansible configurations'){
