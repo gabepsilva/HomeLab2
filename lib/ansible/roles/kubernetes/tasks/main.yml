@@ -8,13 +8,13 @@
 
 - name: Add Kubernetes repository
   apt_repository:
-    repo: deb http://apt.kubernetes.io/ kubernetes-jammy main
+    repo: deb http://apt.kubernetes.io/ kubernetes-xenial main
     state: present
     update_cache: true
 
 - name: Install K8s + dependencies
   package: name={{ item }} state=latest
-  loop: ['apt-transport-https', 'curl', 'ca-certificates', 'kubelet', 'kubeadm', 'kubectl']
+  loop: ['apt-transport-https', 'curl', 'ca-certificates', 'kubelet', 'kubeadm', 'kubectl', 'kubernetes-cni']
 
 - name: Prevent k8s version Upgrade
   command:
