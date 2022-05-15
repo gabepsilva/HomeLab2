@@ -28,6 +28,7 @@
   tags:
     - cluster_member
   roles:
+    - gfail
     - docker
     - kubernetes
 

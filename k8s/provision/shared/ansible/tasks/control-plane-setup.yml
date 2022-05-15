@@ -2,7 +2,7 @@
 # NEED TO FIX THIS TO WORK WITH DEV AND PROD
 - name: Initialize Kubernetes master with kubeadm init
   command: >
-    k init \
+    akubeadm init \
     --pod-network-cidr=10.200.0.0/16 \
     --upload-certs \
     --control-plane-endpoint={{control_plane_endpoint}}
