@@ -1,0 +1,36 @@
+---
+
+- name: Configure Metal LoadBalancer
+  vars:
+    OS_VERSION=xUbuntu_20.04
+    CRIO_VERSION=1.23
+  command: "{{ item }}"
+  with_items:
+    - curl -fsSL https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/{{OS_VERSION}}/Release.key | sudo gpg --dearmor -o /usr/share/keyrings/libcontainers-archive-keyring.gpg
+    - curl -fsSL https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/{{CRIO_VERSION}}/{{OS_VERSION}}/Release.key | sudo gpg --dearmor -o /usr/share/keyrings/libcontainers-crio-archive-keyring.gpg
+    - echo "deb [signed-by=/usr/share/keyrings/libcontainers-archive-keyring.gpg] https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/{{OS_VERSION}}/ /" | sudo tee /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list
+    - echo "deb [signed-by=/usr/share/keyrings/libcontainers-crio-archive-keyring.gpg] https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/{{CRIO_VERSION}}/{{OS_VERSION}}/ /" | sudo tee /etc/apt/sources.list.d/devel:kubic:libcontainers:stable:cri-o:{{CRIO_VERSION}}.list
+
+- name: Install Crio
+  apt:
+    update_cache: true
+    state: latest
+    name: '{{ item }}'
+  loop:
+    - cri-o
+    - cri-o-runc
+    - containernetworking-plugins
+    - cri-tools
+
+- name: Enable IPv4 forward
+  ansible.builtin.replace:
+    path: /etc/sysctl.conf
+    regexp: '#net.ipv4.ip_forward = 1'
+    replace: 'net.ipv4.ip_forward = 1'
+
+- name: Restart Crio
+  service: name=crio state=restarted
+
+- name: Clean apt cache
+  command:
+    cmd: apt clean

@@ -12,7 +12,18 @@
   package:
     name: '{{ item }}'
     state: latest
-  loop: ['git', 'curl', 'cron', 'jq', 'htop', 'sysstat', 'nfs-common']
+  loop:
+    - 'git'
+    - 'curl'
+    - 'cron'
+    - 'jq'
+    - 'htop'
+    - 'sysstat' 
+    - 'nfs-common'
+    - 'ca-certificates'
+    - 'curl'
+    - 'lsb-release'
+    - 'gnupg2'
 
 - name: Install gotop
   unarchive:
