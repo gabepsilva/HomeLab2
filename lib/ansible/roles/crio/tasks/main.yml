@@ -13,12 +13,12 @@
 
 - name: Add CRIO to Repository 1
   apt_repository:
-    repo: deb [signed-by=/usr/share/keyrings/libcontainers-archive-keyring.gpg] https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/{{OS_VERSION}}/ /
+    repo: deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/{{OS_VERSION}}/ /
     state: present
 
 - name: Add CRIO to Repository 2
   apt_repository:
-    repo: deb [signed-by=/usr/share/keyrings/libcontainers-crio-archive-keyring.gpg] https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/{{CRIO_VERSION}}/{{OS_VERSION}}/ /
+    repo: deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/{{CRIO_VERSION}}/{{OS_VERSION}}/ /
     state: present
 
 # - name: Prep to install Crio
