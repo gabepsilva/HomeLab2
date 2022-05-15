@@ -48,7 +48,7 @@ podTemplate(
                     sh 'date'
                 }
             }
-            sleep 45
+            //sleep 45
         }
 
         stage('Ansible configurations'){
