@@ -13,7 +13,7 @@
     update_cache: true
 
 - name: Install K8s + dependencies
-  package: name={{ item }} state=latest
+  package: name={{ item }}
   loop: 
     - 'apt-transport-https'
     - 'curl'
