@@ -1,36 +1,13 @@
 ---
 
+# NEED TO FIX THIS TO WORK WITH DEV AND PROD
+- name: Initialize Kubernetes master with kubeadm init
+  command: >
+    curl -fsSL https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/{{OS_VERSION}}/Release.key | gpg --dearmor -o /usr/share/keyrings/libcontainers-archive-keyring.gpg
+    curl -fsSL https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/{{CRIO_VERSION}}/{{OS_VERSION}}/Release.key | sudo gpg --dearmor -o /usr/share/keyrings/libcontainers-crio-archive-keyring.gpg
+    echo "deb [signed-by=/usr/share/keyrings/libcontainers-archive-keyring.gpg] https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/{{OS_VERSION}}/ /" | sudo tee /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list
+    echo "deb [signed-by=/usr/share/keyrings/libcontainers-crio-archive-keyring.gpg] https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/{{CRIO_VERSION}}/{{OS_VERSION}}/ /" | sudo tee /etc/apt/sources.list.d/devel:kubic:libcontainers:stable:cri-o:{{CRIO_VERSION}}.list
 
-- name: Add CRIO GPG apt Key 1
-  apt_key:
-    url: https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/{{OS_VERSION}}/Release.key
-    state: present
-
-- name: Add Docker GPG apt Key 2
-  apt_key:
-    url: https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/{{CRIO_VERSION}}/{{OS_VERSION}}/Release.key
-    state: present
-
-- name: Add CRIO to Repository 1
-  apt_repository:
-    repo: deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/{{OS_VERSION}}/ /
-    state: present
-
-- name: Add CRIO to Repository 2
-  apt_repository:
-    repo: deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/{{CRIO_VERSION}}/{{OS_VERSION}}/ /
-    state: present
-
-# - name: Prep to install Crio
-#   vars:
-#     OS_VERSION: xUbuntu_20.04
-#     CRIO_VERSION: 1.23
-#   command: "{{ item }}"
-#   with_items:
-#    # - "'curl -fsSL https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/{{OS_VERSION}}/Release.key | gpg --dearmor -o /usr/share/keyrings/libcontainers-archive-keyring.gpg'"
-#    # - 'curl -fsSL https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/{{CRIO_VERSION}}/{{OS_VERSION}}/Release.key | sudo gpg --dearmor -o /usr/share/keyrings/libcontainers-crio-archive-keyring.gpg'
-#    # - 'echo "deb [signed-by=/usr/share/keyrings/libcontainers-archive-keyring.gpg] https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/{{OS_VERSION}}/ /" | sudo tee /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list'
-#    # - 'echo "deb [signed-by=/usr/share/keyrings/libcontainers-crio-archive-keyring.gpg] https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/{{CRIO_VERSION}}/{{OS_VERSION}}/ /" | sudo tee /etc/apt/sources.list.d/devel:kubic:libcontainers:stable:cri-o:{{CRIO_VERSION}}.list'
 
 - name: Install Crio
   apt:
