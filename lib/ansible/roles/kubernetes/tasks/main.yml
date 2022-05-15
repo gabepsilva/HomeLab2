@@ -13,14 +13,14 @@
     update_cache: true
 
 - name: Install K8s + dependencies
-  package: name={{ item }}
+  package: name={{ item }} state=latest
   loop: 
     - 'apt-transport-https'
     - 'curl'
     - 'ca-certificates'
-    - 'kubelet=1.23.6-00'
-    - 'kubeadm=1.23.6-00'
-    - 'kubectl=1.23.6-00'
+    - 'kubelet'
+    - 'kubeadm'
+    - 'kubectl'
 
 - name: Prevent k8s version Upgrade
   command:
