@@ -42,13 +42,12 @@ podTemplate(
 
             dir('k8s/provision/develop'){
                 ansiColor('xterm') {
-                    //sh 'terraform init'
-                    //sh 'terraform destroy --auto-approve'
-                    //sh 'terraform apply --auto-approve'
-                    sh 'date'
+                    sh 'terraform init'
+                    sh 'terraform destroy --auto-approve'
+                    sh 'terraform apply --auto-approve'
                 }
             }
-            //sleep 45
+            sleep 45
         }
 
         stage('Ansible configurations'){
