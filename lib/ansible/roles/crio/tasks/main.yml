@@ -2,8 +2,8 @@
 
 - name: Configure Metal LoadBalancer
   vars:
-    OS_VERSION=xUbuntu_20.04
-    CRIO_VERSION=1.23
+    OS_VERSION: xUbuntu_20.04
+    CRIO_VERSION: 1.23
   command: "{{ item }}"
   with_items:
     - curl -fsSL https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/{{OS_VERSION}}/Release.key | sudo gpg --dearmor -o /usr/share/keyrings/libcontainers-archive-keyring.gpg
