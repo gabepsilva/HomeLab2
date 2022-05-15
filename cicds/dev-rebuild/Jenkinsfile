@@ -51,12 +51,12 @@ podTemplate(
         }
 
         stage('Ansible configurations'){
-            sh 'chmod 400 ansible.cfg'            
-            sh '''ansible-playbook \
-                -i lib/ansible/dev-inventory.yml k8s/provision/shared/ansible/k8s-cluster.yml \
-                --extra-vars "vars_file=dev_vars.yml"'''
-            
-
+            sh 'chmod 400 ansible.cfg'
+            ansiColor('xterm') {            
+                sh '''ansible-playbook \
+                    -i lib/ansible/dev-inventory.yml k8s/provision/shared/ansible/k8s-cluster.yml \
+                    --extra-vars "vars_file=dev_vars.yml"'''
+            }
         }
     }
 }
