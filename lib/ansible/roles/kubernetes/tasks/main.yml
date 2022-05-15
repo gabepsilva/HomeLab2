@@ -14,7 +14,13 @@
 
 - name: Install K8s + dependencies
   package: name={{ item }} state=latest
-  loop: ['apt-transport-https', 'curl', 'ca-certificates', 'kubelet', 'kubeadm', 'kubectl', 'kubernetes-cni']
+  loop: 
+    - 'apt-transport-https'
+    - 'curl'
+    - 'ca-certificates'
+    - 'kubelet=1.23.6-00'
+    - 'kubeadm=1.23.6-00'
+    - 'kubectl=1.23.6-00'
 
 - name: Prevent k8s version Upgrade
   command:
