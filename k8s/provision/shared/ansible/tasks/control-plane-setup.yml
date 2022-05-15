@@ -3,7 +3,7 @@
 - name: Initialize Kubernetes master with kubeadm init
   command: >
     kubeadm init \
-    --pod-network-cidr=10.200.0.0/16 \
+    --pod-network-cidr=10.100.0.0/16 \
     --upload-certs \
     --control-plane-endpoint={{control_plane_endpoint}}
   register: kubeadmin_init
