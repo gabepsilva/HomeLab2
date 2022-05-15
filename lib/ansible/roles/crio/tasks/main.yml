@@ -1,7 +1,7 @@
 ---
 
 # NEED TO FIX THIS TO WORK WITH DEV AND PROD
-- name: Install Crio
+- name: Prep install CRI-O
   command: >
     bash -c "
       curl -fsSL https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/{{OS_VERSION}}/Release.key | gpg --dearmor -o /usr/share/keyrings/libcontainers-archive-keyring.gpg
