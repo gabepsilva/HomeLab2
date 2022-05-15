@@ -22,15 +22,14 @@
 
 ######## INSTALL DOCKER + K8S ########
 
-- hosts: nodes
-  become: true
-  gather_facts: false
-  tags:
-    - cluster_member
-  roles:
-    - gfail
-    - docker
-    - kubernetes
+# - hosts: nodes
+#   become: true
+#   gather_facts: false
+#   tags:
+#     - cluster_member
+#   roles:
+#     - docker
+#     - kubernetes
 
 
 ######## INSTALL HELM ########
