@@ -31,7 +31,7 @@ variable "containers" {
     # {
     #   name      = "pmaster2"
     #   fqdn      = "pmaster1.psilva.org" 
-    #   ip        = "192.168.15.202"
+    #   ip        = "192.168.51.202"
     #   cpu       = 2
     #   mem       = "3GiB"
 

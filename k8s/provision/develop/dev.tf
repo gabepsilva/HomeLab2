@@ -1,7 +1,7 @@
 terraform { 
   backend "gcs" {
       bucket = "homelab2"
-      prefix  = "dev"
+      prefix  = "dev/k8s"
   }
 }
 

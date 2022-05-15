@@ -1,7 +1,7 @@
 terraform { 
   backend "gcs" {
       bucket = "homelab2"
-      prefix  = "prod"
+      prefix  = "prod/prod"
   }
 }
 
