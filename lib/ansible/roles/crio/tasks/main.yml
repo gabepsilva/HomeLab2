@@ -1,15 +1,15 @@
 ---
 
-- name: Configure Metal LoadBalancer
+- name: Prep to install Crio
   vars:
     OS_VERSION: xUbuntu_20.04
     CRIO_VERSION: 1.23
   command: "{{ item }}"
   with_items:
-    - curl -fsSL https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/{{OS_VERSION}}/Release.key | sudo gpg --dearmor -o /usr/share/keyrings/libcontainers-archive-keyring.gpg
-    - curl -fsSL https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/{{CRIO_VERSION}}/{{OS_VERSION}}/Release.key | sudo gpg --dearmor -o /usr/share/keyrings/libcontainers-crio-archive-keyring.gpg
-    - echo "deb [signed-by=/usr/share/keyrings/libcontainers-archive-keyring.gpg] https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/{{OS_VERSION}}/ /" | sudo tee /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list
-    - echo "deb [signed-by=/usr/share/keyrings/libcontainers-crio-archive-keyring.gpg] https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/{{CRIO_VERSION}}/{{OS_VERSION}}/ /" | sudo tee /etc/apt/sources.list.d/devel:kubic:libcontainers:stable:cri-o:{{CRIO_VERSION}}.list
+    - 'curl -fsSL https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/{{OS_VERSION}}/Release.key | sudo gpg --dearmor -o /usr/share/keyrings/libcontainers-archive-keyring.gpg'
+    - 'curl -fsSL https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/{{CRIO_VERSION}}/{{OS_VERSION}}/Release.key | sudo gpg --dearmor -o /usr/share/keyrings/libcontainers-crio-archive-keyring.gpg'
+    - 'echo "deb [signed-by=/usr/share/keyrings/libcontainers-archive-keyring.gpg] https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/{{OS_VERSION}}/ /" | sudo tee /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list'
+    - 'echo "deb [signed-by=/usr/share/keyrings/libcontainers-crio-archive-keyring.gpg] https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/{{CRIO_VERSION}}/{{OS_VERSION}}/ /" | sudo tee /etc/apt/sources.list.d/devel:kubic:libcontainers:stable:cri-o:{{CRIO_VERSION}}.list'
 
 - name: Install Crio
   apt:
