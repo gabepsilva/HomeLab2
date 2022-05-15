@@ -1,0 +1,7 @@
+---
+OS_VERSION: xUbuntu_20.04
+CRIO_VERSION: 1.23
+
+
+#export OS_VERSION=xUbuntu_20.04
+#export CRIO_VERSION=1.23
