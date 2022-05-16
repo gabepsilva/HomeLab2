@@ -25,6 +25,11 @@
     net.bridge.bridge-nf-call-ip6tables = 1
     EOF
 
+    # longhorn storage dependency
+    systemctl enable iscsid
+    systemctl start iscsid
+
+    
     sudo sysctl --system
 
 

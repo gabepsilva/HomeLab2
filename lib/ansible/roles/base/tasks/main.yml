@@ -24,6 +24,7 @@
     - 'curl'
     - 'lsb-release'
     - 'gnupg2'
+    - 'open-iscsi'
 
 - name: Install gotop
   unarchive:
