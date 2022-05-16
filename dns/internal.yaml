@@ -40,6 +40,8 @@ rewrites:
     answer: 192.168.51.198  
   - domain: jenkins.psilva.org       
     answer: 192.168.49.142  
+  - domain: jenkins.dev.psilva.org       
+    answer: 192.168.51.142  
   - domain: speedtest-tracker.psilva.org       
     answer: 192.168.49.149  
   - domain: uptime-kuma.psilva.org       
