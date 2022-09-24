@@ -1,0 +1,9 @@
+bases:
+  - ../base
+  
+patches:
+  #- rbac.yaml
+  #- deployment.yaml
+  - pv.yaml
+  - service.yaml
+  
